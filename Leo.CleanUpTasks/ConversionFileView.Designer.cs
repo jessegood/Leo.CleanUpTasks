@@ -42,6 +42,7 @@
             this.filterTextBox = new System.Windows.Forms.TextBox();
             this.filterLabel = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.saveButton = new System.Windows.Forms.Button();
             this.subSegmentCheckBox = new System.Windows.Forms.CheckBox();
             this.tagPairCheckBox = new System.Windows.Forms.CheckBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
@@ -72,7 +73,6 @@
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.saveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -240,6 +240,15 @@
             this.dataGridView.RowTemplate.Height = 21;
             this.dataGridView.Size = new System.Drawing.Size(461, 246);
             this.dataGridView.TabIndex = 0;
+            // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(170, 265);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 20;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
             // 
             // subSegmentCheckBox
             // 
@@ -515,21 +524,13 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // saveButton
-            // 
-            this.saveButton.Location = new System.Drawing.Point(170, 265);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
-            this.saveButton.TabIndex = 20;
-            this.saveButton.Text = "Save";
-            this.saveButton.UseVisualStyleBackColor = true;
-            // 
             // ConversionFileView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 291);
             this.Controls.Add(this.mainSplitContainer);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(805, 330);
             this.Name = "ConversionFileView";
             this.Text = "Conversion File";
