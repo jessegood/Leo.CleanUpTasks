@@ -5,6 +5,7 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Web;
     using System.Xml.Linq;
 
     public class XmlReportGenerator : IXmlReportGenerator
@@ -46,7 +47,7 @@
 
             document.Root.Add(new XElement(File,
                      new XAttribute(Name, file),
-                     new XAttribute(FullPath, SimpleLog.FileName)));
+                     new XAttribute(FullPath, new Uri(SimpleLog.FileName).AbsoluteUri)));
         }
 
         public void AddLockItem(string segmentNumber, string lockedContent, string lockReason)

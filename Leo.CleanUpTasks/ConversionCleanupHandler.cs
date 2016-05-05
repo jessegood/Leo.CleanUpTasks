@@ -348,6 +348,24 @@
             stringBuilder.Append(endTag);
         }
 
+        private void Log(string original, IText itext, ConversionItem item, string convertedText)
+        {
+            if (itext.Parent is ISegment)
+            {
+                var segment = (ISegment)itext.Parent;
+                reportGenerator.AddConversionItem(segment.Properties.Id.Id, original, convertedText, item.Search.Text, item.Replacement.Text);
+            }
+            else if (itext.Parent is ITagPair)
+            {
+                var tagPair = (ITagPair)itext.Parent;
+                if (tagPair.Parent is ISegment)
+                {
+                    var segment = (ISegment)tagPair.Parent;
+                    reportGenerator.AddConversionItem(segment.Properties.Id.Id, original, convertedText, item.Search.Text, item.Replacement.Text);
+                }
+            }
+        }
+
         private void ProcessSingleString(string original, IText itext, ConversionItem item)
         {
             var search = item.Search;
@@ -373,35 +391,26 @@
 
                 if (result)
                 {
-                    if (itext.Parent is ISegment)
-                    {
-                        var segment = (ISegment)itext.Parent;
-                        reportGenerator.AddConversionItem(segment.Properties.Id.Id, original, updatedText, item.Search.Text, item.Replacement.Text);
-                    }
+                    Log(original, itext, item, updatedText);
 
                     CreatePlaceHolder(updatedText, itext);
                 }
             }
             else
             {
-                string updatedText;
-                var result = TryReplaceString(original, item, search, out updatedText);
+                string convertedText;
+                var replaceSuccessful = TryReplaceString(original, item, search, out convertedText);
 
-                if (result)
+                if (replaceSuccessful)
                 {
-                    if (itext.Parent is ISegment)
-                    {
-                        var segment = (ISegment)itext.Parent;
-                        reportGenerator.AddConversionItem(segment.Properties.Id.Id, original, updatedText, item.Search.Text, item.Replacement.Text);
-                    }
+                    Log(original, itext, item, convertedText);
 
-                    UpdateIText(updatedText, itext);
+                    UpdateIText(convertedText, itext);
 
-                    plainText.Replace(original, updatedText);
+                    plainText.Replace(original, convertedText);
                 }
             }
         }
-
         private void ProcessText(ConversionItem item, ISegment segment)
         {
             Contract.Requires<ArgumentNullException>(item != null);
@@ -512,6 +521,12 @@
                     if (result)
                     {
                         UpdateTagPair(updatedText, fullText, tagpair);
+
+                        if (tagpair.Parent is ISegment)
+                        {
+                            var segment = (ISegment)tagpair.Parent;
+                            reportGenerator.AddConversionItem(segment.Properties.Id.Id, fullText, updatedText, item.Search.Text, item.Replacement.Text);
+                        }
                     }
                 }
             }

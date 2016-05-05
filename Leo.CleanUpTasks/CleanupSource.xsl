@@ -36,7 +36,9 @@
             <tr class="Row">
               <th class="Header">LogFile</th>
               <td>
-                  <xsl:value-of select="@FullPath" />
+                <a href="{@FullPath}">
+                  View Log File
+                </a>
               </td>
             </tr>
             <tr class="Row">

@@ -135,7 +135,9 @@
 
             var placeholderTagList = new Dictionary<string, bool>();
 
-            if (file.LocalFileState == LocalFileState.None && File.Exists(file.LocalFilePath))
+            if (file.LocalFileState == LocalFileState.None &&
+                File.Exists(file.LocalFilePath) &&
+                Path.GetExtension(file.LocalFilePath) == ".sdlxliff")
             {
                 var root = XElement.Load(file.LocalFilePath, LoadOptions.None);
                 foreach (var tag in root.Descendants(sdl + "tag"))
