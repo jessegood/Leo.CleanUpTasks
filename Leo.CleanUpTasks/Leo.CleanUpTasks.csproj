@@ -370,7 +370,7 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <CreatePluginPackage>false</CreatePluginPackage>
+    <CreatePluginPackage>true</CreatePluginPackage>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

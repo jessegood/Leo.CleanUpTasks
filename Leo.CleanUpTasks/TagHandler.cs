@@ -83,6 +83,11 @@
                     {
                         fmtTagsToRemove.Push(tagPair);
                     }
+
+                    // Reset the verifier for each TagPair!!
+                    // Otherwise, the verifier keeps the settings from the
+                    // previous one
+                    fmtVisitor.ResetVerifier();
                 }
             }
         }

@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     public class FormattingVisitor : IVerifyingFormattingVisitor
     {
@@ -30,6 +31,14 @@
             Contract.Requires<ArgumentNullException>(settings != null);
 
             this.settings = settings;
+        }
+
+        public void ResetVerifier()
+        {
+            foreach (var key in verifier.Keys.ToList())
+            {
+                verifier[key] = false;
+            }
         }
 
         public bool ShouldRemoveTag()
