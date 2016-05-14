@@ -40,8 +40,6 @@
 
         public void VisitSegment(ISegment segment)
         {
-            if (ShouldSkip(segment)) { return; }
-
             VisitChildren(segment);
 
             ProcessPlaceholderTags();
