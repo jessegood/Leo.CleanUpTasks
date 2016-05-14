@@ -21,6 +21,207 @@
         }
 
         [Fact]
+        public void VisitSegmentCreatesEmbeddedTagPair()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<strong>text is bold</strong>",
+                                                         embeddedTags: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This <strong>text is bold</strong> and the tags should stay", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            Assert.Equal(2, sourceHandler.PlaceholderList.Count);
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesEmbeddedTagPairRegex()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<strong>(.+?)</strong>",
+                                                         embeddedTags: true,
+                                                         useRegex: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This <strong>text is bold</strong> and the tags should stay", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesEmbeddedTagPairNested()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<strong>(.+?)</strong>",
+                                                         embeddedTags: true,
+                                                         useRegex: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This <strong>text <nested/>is bold</strong> and the tags should stay", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            Assert.Equal(3, sourceHandler.PlaceholderList.Count);
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesEmbeddedTagPairNestedTwice()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<strong>(.+?)</strong>",
+                                                         embeddedTags: true,
+                                                         useRegex: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This <strong>text with <more> nested <nested/> </more> is bold</strong> and the tags should stay", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            Assert.Equal(5, sourceHandler.PlaceholderList.Count);
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesOnePlaceholderWithEmbeddedTag()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "text",
+                                                         placeHolder: true,
+                                                         replacementText: "<text />");
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This text <will/> be replaced", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+        }
+
+        [Fact]
+        public void VisitSegmentReportsWarningWhenReplacementEmpty()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "text",
+                                                         placeHolder: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This text <will/> be replaced", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.DidNotReceive().RemoveFromParent();
+            reporter.Received().Report(sourceHandler, ErrorLevel.Warning, Arg.Any<string>(), Arg.Any<string>());
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesEmbeddedTagPairRegexBackReferences()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: @"<([a-z]*)>.*?<\/\1>",
+                                                         embeddedTags: true,
+                                                         useRegex: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("This <strong>text is bold</strong> and the tags should stay", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesNewFormattingTagPair()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "some text",
+                                                         placeHolder: true,
+                                                         replacementText: "<cf bold=\"True\">some text</cf>");
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("some text", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
+        }
+
+        [Fact]
         public void VisitSegmentCreatesPlaceholderElement()
         {
             // Arrange
@@ -41,6 +242,78 @@
 
             // Assert
             segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            text.Received().RemoveFromParent();
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesPlaceholderElementAndUpdatesSurroundingTextToUpper()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: @"([0-9]+)",
+                                                         useRegex: true,
+                                                         replacementText: @"<numbers value=""$1""/>",
+                                                         placeHolder: true);
+
+            list[0].Items.Add(new ConversionItem()
+            {
+                Search = new SearchText() { Text = "here is" },
+                Replacement = new ReplacementText() { Text = "I REPLACED THIS" }
+            });
+
+            list[0].Items.Add(new ConversionItem()
+            {
+                Search = new SearchText() { Text = "other" },
+                Replacement = new ReplacementText() { Text = "", ToUpper = true }
+            });
+
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("here is some numbers 123456 and some other stuff", segment);
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            segment.DidNotReceive().RemoveFromParent();
+            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            text.Received().RemoveFromParent();
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesPlaceholderElementAndUpdatesText()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: @"([0-9]+)",
+                                                         useRegex: true,
+                                                         replacementText: @"<numbers value=""$1""/>",
+                                                         placeHolder: true);
+
+            list[0].Items.Add(new ConversionItem()
+            {
+                Search = new SearchText() { Text = "here is" },
+                Replacement = new ReplacementText() { Text = "I REPLACED THIS" }
+            });
+
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("here is some numbers 123456", segment);
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            segment.DidNotReceive().RemoveFromParent();
+            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -175,7 +448,6 @@
             var settings = utility.CreateSettings();
             var list = utility.CreateConversionItemLists(searchText: "<tag>(.+?)</tag>",
                                                          tagPair: true,
-                                                         subSegment: true,
                                                          replacementText: @"<tag trans=""$1""/>",
                                                          placeHolder: true);
             var segment = utility.CreateSegment(isLocked: false);
@@ -194,6 +466,61 @@
             // Assert
             tagPair.Parent.Received().Add(Arg.Any<IAbstractMarkupData>());
             tagPair.Received().RemoveFromParent();
+        }
+
+        [Fact]
+        public void VisitSegmentMatchesTagPairAndUpdatesContent()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<cf bold=\"True\">(.+?)</cf>",
+                                                         tagPair: true,
+                                                         replacementText: "<cf bold=\"True\">$1</cf>",
+                                                         toUpper: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("some text", segment);
+            var tagPair = utility.CreateTag("<cf bold=\"True\">", "</cf>", text);
+            tagPair.Parent = utility.CreateSegment();
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitTagPair(tagPair);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            tagPair.Received().Add(Arg.Any<IAbstractMarkupData>());
+            tagPair.DidNotReceive().RemoveFromParent();
+        }
+
+        [Fact]
+        public void VisitSegmentMatchesTagPairAndUpdatesFormatting()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<cf bold=\"True\">(.+?)</cf>",
+                                                         tagPair: true,
+                                                         replacementText: "<cf bold=\"False\">$1</cf>");
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("some text", segment);
+            var tagPair = utility.CreateTag("<cf bold=\"True\">", "</cf>", text);
+            tagPair.Parent = utility.CreateSegment();
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitTagPair(tagPair);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            tagPair.StartTagProperties.Formatting.Received().Add(Arg.Any<IFormattingItem>());
+            tagPair.DidNotReceive().RemoveFromParent();
         }
 
         [Fact]
@@ -542,194 +869,6 @@
             var result = text.Properties.Text;
             Assert.Equal("SOME TEXT MAKE ME UPPERCASE", result);
         }
-
-        [Fact]
-        public void VisitSegmentUpdatesITextDiacriticsWithMultipleConversionItems()
-        {
-            // Arrange
-            var settings = utility.CreateSettings();
-            var list = utility.CreateConversionItemLists(searchText: "č",
-                                                         replacementText: "c");
-            list[0].Items.Add(new ConversionItem()
-            {
-                Search = new SearchText() { Text = "š" },
-                Replacement = new ReplacementText() { Text = "s" }
-            });
-
-            list[0].Items.Add(new ConversionItem()
-            {
-                Search = new SearchText() { Text = "ć" },
-                Replacement = new ReplacementText() { Text = "c" }
-            });
-
-            var segment = utility.CreateSegment(isLocked: false);
-            var text = utility.CreateText("čšć", segment);
-            var itemFactory = Substitute.For<IDocumentItemFactory>();
-            var reporter = Substitute.For<ICleanUpMessageReporter>();
-            var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
-
-            // Act
-            sourceHandler.VisitText(text);
-            sourceHandler.VisitSegment(segment);
-
-            // Assert
-            var result = text.Properties.Text;
-            Assert.Equal("csc", result);
-        }
-
-        [Fact]
-        public void VisitSegmentCreatesPlaceholderElementAndUpdatesText()
-        {
-            // Arrange
-            var settings = utility.CreateSettings();
-            var list = utility.CreateConversionItemLists(searchText: @"([0-9]+)",
-                                                         useRegex: true,
-                                                         replacementText: @"<numbers value=""$1""/>",
-                                                         placeHolder: true);
-
-            list[0].Items.Add(new ConversionItem()
-            {
-                Search = new SearchText() { Text = "here is" },
-                Replacement = new ReplacementText() { Text = "I REPLACED THIS" }
-            });
-
-            var segment = utility.CreateSegment(isLocked: false);
-            var text = utility.CreateText("here is some numbers 123456", segment);
-            var itemFactory = Substitute.For<IDocumentItemFactory>();
-            var reporter = Substitute.For<ICleanUpMessageReporter>();
-            var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
-
-            // Act
-            sourceHandler.VisitText(text);
-            sourceHandler.VisitSegment(segment);
-
-            // Assert
-            segment.DidNotReceive().RemoveFromParent();
-            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
-            text.Received().RemoveFromParent();
-        }
-
-        [Fact]
-        public void VisitSegmentCreatesPlaceholderElementAndUpdatesSurroundingTextToUpper()
-        {
-            // Arrange
-            var settings = utility.CreateSettings();
-            var list = utility.CreateConversionItemLists(searchText: @"([0-9]+)",
-                                                         useRegex: true,
-                                                         replacementText: @"<numbers value=""$1""/>",
-                                                         placeHolder: true);
-
-            list[0].Items.Add(new ConversionItem()
-            {
-                Search = new SearchText() { Text = "here is" },
-                Replacement = new ReplacementText() { Text = "I REPLACED THIS" }
-            });
-
-            list[0].Items.Add(new ConversionItem()
-            {
-                Search = new SearchText() { Text = "other" },
-                Replacement = new ReplacementText() { Text = "", ToUpper = true }
-            });
-
-            var segment = utility.CreateSegment(isLocked: false);
-            var text = utility.CreateText("here is some numbers 123456 and some other stuff", segment);
-            var itemFactory = Substitute.For<IDocumentItemFactory>();
-            var reporter = Substitute.For<ICleanUpMessageReporter>();
-            var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
-
-            // Act
-            sourceHandler.VisitText(text);
-            sourceHandler.VisitSegment(segment);
-
-            // Assert
-            segment.DidNotReceive().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
-            text.Received().RemoveFromParent();
-        }
-
-        [Fact]
-        public void VisitSegmentMatchesTagPairAndUpdatesFormatting()
-        {
-            // Arrange
-            var settings = utility.CreateSettings();
-            var list = utility.CreateConversionItemLists(searchText: "<cf bold=\"True\">(.+?)</cf>",
-                                                         tagPair: true,
-                                                         replacementText: "<cf bold=\"False\">$1</cf>");
-            var segment = utility.CreateSegment(isLocked: false);
-            var text = utility.CreateText("some text", segment);
-            var tagPair = utility.CreateTag("<cf bold=\"True\">", "</cf>", text);
-            tagPair.Parent = utility.CreateSegment();
-
-            var itemFactory = Substitute.For<IDocumentItemFactory>();
-            var reporter = Substitute.For<ICleanUpMessageReporter>();
-            var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
-
-            // Act
-            sourceHandler.VisitTagPair(tagPair);
-            sourceHandler.VisitSegment(segment);
-
-            // Assert
-            tagPair.StartTagProperties.Formatting.Received().Add(Arg.Any<IFormattingItem>());
-            tagPair.DidNotReceive().RemoveFromParent();
-        }
-
-        [Fact]
-        public void VisitSegmentMatchesTagPairAndUpdatesContent()
-        {
-            // Arrange
-            var settings = utility.CreateSettings();
-            var list = utility.CreateConversionItemLists(searchText: "<cf bold=\"True\">(.+?)</cf>",
-                                                         tagPair: true,
-                                                         replacementText: "<cf bold=\"True\">$1</cf>",
-                                                         toUpper: true);
-            var segment = utility.CreateSegment(isLocked: false);
-            var text = utility.CreateText("some text", segment);
-            var tagPair = utility.CreateTag("<cf bold=\"True\">", "</cf>", text);
-            tagPair.Parent = utility.CreateSegment();
-
-            var itemFactory = Substitute.For<IDocumentItemFactory>();
-            var reporter = Substitute.For<ICleanUpMessageReporter>();
-            var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
-
-            // Act
-            sourceHandler.VisitTagPair(tagPair);
-            sourceHandler.VisitSegment(segment);
-
-            // Assert
-            tagPair.Received().Add(Arg.Any<IAbstractMarkupData>());
-            tagPair.DidNotReceive().RemoveFromParent();
-        }
-
-        [Fact]
-        public void VisitSegmentCreatesNewFormattingTagPair()
-        {
-            // Arrange
-            var settings = utility.CreateSettings();
-            var list = utility.CreateConversionItemLists(searchText: "some text",
-                                                         placeHolder: true,
-                                                         replacementText: "<cf bold=\"True\">some text</cf>");
-            var segment = utility.CreateSegment(isLocked: false);
-            var text = utility.CreateText("some text", segment);
-
-            var itemFactory = Substitute.For<IDocumentItemFactory>();
-            var reporter = Substitute.For<ICleanUpMessageReporter>();
-            var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
-
-            // Act
-            sourceHandler.VisitText(text);
-            sourceHandler.VisitSegment(segment);
-
-            // Assert
-            text.Received().RemoveFromParent();
-            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
-        }
-
         [Fact]
         public void VisitSegmentUpdatesMetaDataOfFormattingTag()
         {

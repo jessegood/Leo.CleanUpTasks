@@ -41,7 +41,11 @@
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(endTag));
 
-            return ItemFactory.PropertiesFactory.CreateEndTagProperties(endTag);
+            var endTagProps = ItemFactory.PropertiesFactory.CreateEndTagProperties(endTag);
+            endTagProps.TagContent = endTag;
+            endTagProps.DisplayText = endTag;
+
+            return endTagProps;
         }
 
         protected IFormattingGroup CreateFormattingGroup()
@@ -96,7 +100,20 @@
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(startTag));
 
-            return ItemFactory.PropertiesFactory.CreateStartTagProperties(startTag);
+            var startTagProps = ItemFactory.PropertiesFactory.CreateStartTagProperties(startTag);
+            startTagProps.TagContent = startTag;
+
+            var m = Regex.Match(startTag, @"<(\w+)\s+\w+.*?>");
+            if (m.Success)
+            {
+                startTagProps.DisplayText = $"<{m.Groups[1].Value}>";
+            }
+            else
+            {
+                startTagProps.DisplayText = startTag;
+            }
+
+            return startTagProps;
         }
 
         protected ITagPair CreateTagPair(IStartTagProperties startTag, IEndTagProperties endTag)

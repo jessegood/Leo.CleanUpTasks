@@ -29,10 +29,9 @@
         private readonly IFileDialog dialog = null;
         private readonly BatchTaskMode taskMode;
         private readonly IConversionFileView view = null;
-        private ConversionFileViewMode viewMode;
         private BindingListView<ConversionItem> bindingListView = null;
         private bool isInputFormDisabled = false;
-
+        private ConversionFileViewMode viewMode;
         public ConversionFileViewPresenter(IConversionFileView view, IFileDialog dialog, ConversionFileViewMode viewMode, BatchTaskMode taskMode)
         {
             Contract.Requires<ArgumentNullException>(view != null);
@@ -42,10 +41,6 @@
             this.dialog = dialog;
             this.viewMode = viewMode;
             this.taskMode = taskMode;
-
-            // TODO: Subsegment is not visible and disabled as cannot find a way to add new segments in Batch Task API
-            this.view.SubSegment.Enabled = false;
-            this.view.SubSegment.Visible = false;
         }
 
         public void CheckSaveButton()
@@ -65,8 +60,7 @@
                 view.ToUpper.Enabled = false;
                 view.Placeholder.Enabled = false;
                 view.TagPair.Enabled = false;
-                // TODO: Consider deleting following line
-                // view.SubSegment.Enabled = false;
+                view.EmbeddedTags.Enabled = false;
                 isInputFormDisabled = true;
             }
             else if (isInputFormDisabled)
@@ -84,11 +78,10 @@
                 view.CaseSensitive.Enabled = true;
                 view.Regex.Enabled = true;
                 view.StrConv.Enabled = true;
+                view.EmbeddedTags.Enabled = true;
                 // Disabled by default
                 // view.ToLower.Enabled = false;
                 // view.ToUpper.Enabled = false;
-                // TODO: Consider deleting subsegment
-                // view.SubSegment.Enabled = false;
                 view.Placeholder.Enabled = true;
                 view.TagPair.Enabled = true;
                 isInputFormDisabled = false;
@@ -178,17 +171,12 @@
             view.ToLower.Click += ToLowerOrUpper_Click;
             view.ToUpper.Click += ToLowerOrUpper_Click;
             view.Placeholder.Click += Placeholder_Click;
+            view.EmbeddedTags.Click += EmbeddedTags_Click;
             view.Filter.TextChanged += Filter_TextChanged;
             view.ClearFilter.Click += ClearFilter_Click;
 
             view.Grid.CellEnter += Grid_CellEnter;
             view.Form.Shown += Form_Shown;
-        }
-
-        private void Grid_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            SetUIStatus();
-            SetCheckBoxComboBoxBinding();
         }
 
         private void CheckMutuallyExclusiveValues(string first, string second)
@@ -225,6 +213,20 @@
         private void ClearFilter_Click(object sender, EventArgs e)
         {
             bindingListView.RemoveFilter();
+        }
+
+        private void EmbeddedTags_Click(object sender, EventArgs e)
+        {
+            if (view.EmbeddedTags.Checked)
+            {
+                ToggleCheckBoxState(false, view.ToLower, view.ToUpper, view.Placeholder, view.TagPair, view.StrConv);
+                view.Replace.Enabled = false;
+            }
+            else
+            {
+                ToggleCheckBoxState(true, view.ToLower, view.ToUpper, view.Placeholder, view.TagPair, view.StrConv);
+                view.Replace.Enabled = true;
+            }
         }
 
         private void Filter_TextChanged(object sender, EventArgs e)
@@ -299,6 +301,11 @@
             }
         }
 
+        private void Grid_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            SetUIStatus();
+            SetCheckBoxComboBoxBinding();
+        }
         private bool IsGridEmpty()
         {
             var bindingSource = view.BindingSource;
@@ -317,18 +324,14 @@
 
         private void Placeholder_Click(object sender, EventArgs e)
         {
-            // TODO: Probably delete the subsegment lines since segments cannot be created
-
             if (view.Placeholder.Checked)
             {
                 ValidateReplaceTextBox();
                 ToggleCheckBoxState(false, view.ToLower, view.ToUpper, view.StrConv);
-                //ToggleCheckBoxState(true, view.SubSegment);
             }
             else
             {
                 ToggleCheckBoxState(true, view.ToLower, view.ToUpper, view.StrConv);
-                //ToggleCheckBoxState(false, view.SubSegment);
             }
         }
 
@@ -442,6 +445,12 @@
             {
                 ToggleCheckBoxState(false, view.StrConv);
             }
+
+            if (view.EmbeddedTags.Checked)
+            {
+                ToggleCheckBoxState(false, view.ToLower, view.ToUpper, view.Placeholder, view.TagPair, view.StrConv);
+                view.Replace.Enabled = false;
+            }
         }
 
         private void SetUpBindings()
@@ -459,9 +468,7 @@
             view.ToLower.DataBindings.Add("Checked", view.BindingSource, "Replacement.ToLower", false, DataSourceUpdateMode.OnValidation);
             view.ToUpper.DataBindings.Add("Checked", view.BindingSource, "Replacement.ToUpper", false, DataSourceUpdateMode.OnValidation);
             view.Placeholder.DataBindings.Add("Checked", view.BindingSource, "Replacement.Placeholder", false, DataSourceUpdateMode.OnValidation);
-
-            // TODO: Disabling any use of subsegment for now. Consider deleting in future
-            // view.SubSegment.DataBindings.Add("Checked", view.BindingSource, "Replacement.SubSegment", false, DataSourceUpdateMode.OnValidation);
+            view.EmbeddedTags.DataBindings.Add("Checked", view.BindingSource, "Search.EmbeddedTags", false, DataSourceUpdateMode.OnValidation);
         }
 
         private void SetUpStrConvComboBox()

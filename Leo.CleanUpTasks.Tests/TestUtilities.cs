@@ -41,6 +41,7 @@
                                                             bool regexEnabled = true,
                                                             bool wholeWordEnabled = true,
                                                             bool tagPairEnabled = true,
+                                                            bool embeddedTags = true,
                                                             bool strConvEnabled = true,
                                                             bool toLowerEnabled = true,
                                                             bool toUpperEnabled = true,
@@ -59,11 +60,11 @@
             view.Regex.Returns(new CheckBox() { Enabled = regexEnabled });
             view.WholeWord.Returns(new CheckBox() { Enabled = wholeWordEnabled });
             view.TagPair.Returns(new CheckBox() { Enabled = tagPairEnabled });
+            view.EmbeddedTags.Returns(new CheckBox() { Enabled = embeddedTags });
             view.StrConv.Returns(new CheckBox() { Enabled = strConvEnabled });
             view.ToLower.Returns(new CheckBox() { Enabled = toLowerEnabled });
             view.ToUpper.Returns(new CheckBox() { Enabled = toUpperEnabled });
             view.Placeholder.Returns(new CheckBox() { Enabled = placeHolderEnabled });
-            view.SubSegment.Returns(new CheckBox() { Enabled = subSegmentEnabled });
             var bindingSource = new BindingSource();
             if (convItem != null)
             {
@@ -85,7 +86,7 @@
                                                                   bool toUpper = false,
                                                                   bool placeHolder = false,
                                                                   bool tagPair = false,
-                                                                  bool subSegment = false)
+                                                                  bool embeddedTags = false)
         {
             var search = new SearchText()
             {
@@ -95,7 +96,8 @@
                 WholeWord = wholeWord,
                 StrConv = strConv,
                 VbStrConv = vbstrConv,
-                TagPair = tagPair
+                TagPair = tagPair,
+                EmbeddedTags = embeddedTags
             };
 
             var replacement = new ReplacementText()
@@ -104,7 +106,6 @@
                 ToLower = toLower,
                 ToUpper = toUpper,
                 Placeholder = placeHolder,
-                SubSegment = subSegment
             };
 
             var list = new ConversionItemList();

@@ -135,7 +135,7 @@
             {
                 foreach (var pair in settings.ConversionFiles)
                 {
-                    if (File.Exists(pair.Key))
+                    if (File.Exists(pair.Key) && pair.Value)
                     {
                         var conversionItemList = XmlUtilities.Deserialize(pair.Key);
                         items.Add(conversionItemList);

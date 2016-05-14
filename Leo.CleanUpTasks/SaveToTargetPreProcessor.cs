@@ -8,6 +8,7 @@
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using Utilities;
 
     public class SaveToTargetPreProcessor : AbstractBilingualContentHandler
@@ -80,7 +81,8 @@
             {
                 foreach (var pair in targetSettings.ConversionFiles)
                 {
-                    if (File.Exists(pair.Key))
+                    // Only load conversion files that exist and are checked
+                    if (File.Exists(pair.Key) && pair.Value)
                     {
                         var conversionItemList = XmlUtilities.Deserialize(pair.Key);
                         items.Add(conversionItemList);

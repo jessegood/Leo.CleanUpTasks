@@ -43,7 +43,6 @@
             this.filterLabel = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.saveButton = new System.Windows.Forms.Button();
-            this.subSegmentCheckBox = new System.Windows.Forms.CheckBox();
             this.tagPairCheckBox = new System.Windows.Forms.CheckBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
@@ -73,6 +72,7 @@
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.embeddedTagsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -92,7 +92,7 @@
             // saveAsButton
             // 
             this.saveAsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveAsButton.Location = new System.Drawing.Point(246, 265);
+            this.saveAsButton.Location = new System.Drawing.Point(246, 290);
             this.saveAsButton.Name = "saveAsButton";
             this.saveAsButton.Size = new System.Drawing.Size(75, 23);
             this.saveAsButton.TabIndex = 1;
@@ -111,8 +111,8 @@
             // 
             // mainSplitContainer.Panel2
             // 
+            this.mainSplitContainer.Panel2.Controls.Add(this.embeddedTagsCheckBox);
             this.mainSplitContainer.Panel2.Controls.Add(this.saveButton);
-            this.mainSplitContainer.Panel2.Controls.Add(this.subSegmentCheckBox);
             this.mainSplitContainer.Panel2.Controls.Add(this.tagPairCheckBox);
             this.mainSplitContainer.Panel2.Controls.Add(this.descriptionLabel);
             this.mainSplitContainer.Panel2.Controls.Add(this.descriptionTextBox);
@@ -130,7 +130,7 @@
             this.mainSplitContainer.Panel2.Controls.Add(this.searchTextBox);
             this.mainSplitContainer.Panel2.Controls.Add(this.bindingNavigator);
             this.mainSplitContainer.Panel2.Controls.Add(this.saveAsButton);
-            this.mainSplitContainer.Size = new System.Drawing.Size(789, 291);
+            this.mainSplitContainer.Size = new System.Drawing.Size(789, 316);
             this.mainSplitContainer.SplitterDistance = 461;
             this.mainSplitContainer.TabIndex = 2;
             // 
@@ -151,8 +151,8 @@
             // gridSplitContainer.Panel2
             // 
             this.gridSplitContainer.Panel2.Controls.Add(this.dataGridView);
-            this.gridSplitContainer.Size = new System.Drawing.Size(461, 291);
-            this.gridSplitContainer.SplitterDistance = 41;
+            this.gridSplitContainer.Size = new System.Drawing.Size(461, 316);
+            this.gridSplitContainer.SplitterDistance = 44;
             this.gridSplitContainer.TabIndex = 1;
             // 
             // clearButton
@@ -174,7 +174,7 @@
             this.groupBox.Controls.Add(this.searchRadioButton);
             this.groupBox.Location = new System.Drawing.Point(260, 0);
             this.groupBox.Name = "groupBox";
-            this.groupBox.Size = new System.Drawing.Size(198, 39);
+            this.groupBox.Size = new System.Drawing.Size(198, 42);
             this.groupBox.TabIndex = 5;
             this.groupBox.TabStop = false;
             this.groupBox.Text = "Column";
@@ -238,32 +238,23 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 21;
-            this.dataGridView.Size = new System.Drawing.Size(461, 246);
+            this.dataGridView.Size = new System.Drawing.Size(461, 268);
             this.dataGridView.TabIndex = 0;
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(170, 265);
+            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveButton.Location = new System.Drawing.Point(170, 290);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 20;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
             // 
-            // subSegmentCheckBox
-            // 
-            this.subSegmentCheckBox.AutoSize = true;
-            this.subSegmentCheckBox.Location = new System.Drawing.Point(49, 263);
-            this.subSegmentCheckBox.Name = "subSegmentCheckBox";
-            this.subSegmentCheckBox.Size = new System.Drawing.Size(124, 16);
-            this.subSegmentCheckBox.TabIndex = 19;
-            this.subSegmentCheckBox.Text = "Create Subsegment";
-            this.subSegmentCheckBox.UseVisualStyleBackColor = true;
-            // 
             // tagPairCheckBox
             // 
             this.tagPairCheckBox.AutoSize = true;
-            this.tagPairCheckBox.Location = new System.Drawing.Point(254, 135);
+            this.tagPairCheckBox.Location = new System.Drawing.Point(28, 156);
             this.tagPairCheckBox.Name = "tagPairCheckBox";
             this.tagPairCheckBox.Size = new System.Drawing.Size(67, 16);
             this.tagPairCheckBox.TabIndex = 18;
@@ -291,7 +282,7 @@
             // wholeWordCheckBox
             // 
             this.wholeWordCheckBox.AutoSize = true;
-            this.wholeWordCheckBox.Location = new System.Drawing.Point(162, 135);
+            this.wholeWordCheckBox.Location = new System.Drawing.Point(170, 134);
             this.wholeWordCheckBox.Name = "wholeWordCheckBox";
             this.wholeWordCheckBox.Size = new System.Drawing.Size(83, 16);
             this.wholeWordCheckBox.TabIndex = 15;
@@ -301,7 +292,7 @@
             // placeHolderCheckBox
             // 
             this.placeHolderCheckBox.AutoSize = true;
-            this.placeHolderCheckBox.Location = new System.Drawing.Point(197, 242);
+            this.placeHolderCheckBox.Location = new System.Drawing.Point(196, 268);
             this.placeHolderCheckBox.Name = "placeHolderCheckBox";
             this.placeHolderCheckBox.Size = new System.Drawing.Size(83, 16);
             this.placeHolderCheckBox.TabIndex = 14;
@@ -314,7 +305,7 @@
             this.checkBoxComboBox.CheckBoxProperties = checkBoxProperties1;
             this.checkBoxComboBox.DisplayMemberSingleItem = "";
             this.checkBoxComboBox.FormattingEnabled = true;
-            this.checkBoxComboBox.Location = new System.Drawing.Point(75, 156);
+            this.checkBoxComboBox.Location = new System.Drawing.Point(82, 181);
             this.checkBoxComboBox.Name = "checkBoxComboBox";
             this.checkBoxComboBox.Size = new System.Drawing.Size(230, 20);
             this.checkBoxComboBox.TabIndex = 13;
@@ -323,7 +314,7 @@
             // strConvCheckBox
             // 
             this.strConvCheckBox.AutoSize = true;
-            this.strConvCheckBox.Location = new System.Drawing.Point(3, 158);
+            this.strConvCheckBox.Location = new System.Drawing.Point(2, 183);
             this.strConvCheckBox.Name = "strConvCheckBox";
             this.strConvCheckBox.Size = new System.Drawing.Size(65, 16);
             this.strConvCheckBox.TabIndex = 12;
@@ -333,7 +324,7 @@
             // toLowerCheckBox
             // 
             this.toLowerCheckBox.AutoSize = true;
-            this.toLowerCheckBox.Location = new System.Drawing.Point(112, 243);
+            this.toLowerCheckBox.Location = new System.Drawing.Point(112, 268);
             this.toLowerCheckBox.Name = "toLowerCheckBox";
             this.toLowerCheckBox.Size = new System.Drawing.Size(78, 16);
             this.toLowerCheckBox.TabIndex = 11;
@@ -343,7 +334,7 @@
             // toUpperCheckBox
             // 
             this.toUpperCheckBox.AutoSize = true;
-            this.toUpperCheckBox.Location = new System.Drawing.Point(28, 243);
+            this.toUpperCheckBox.Location = new System.Drawing.Point(28, 268);
             this.toUpperCheckBox.Name = "toUpperCheckBox";
             this.toUpperCheckBox.Size = new System.Drawing.Size(78, 16);
             this.toUpperCheckBox.TabIndex = 10;
@@ -353,7 +344,7 @@
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(100, 134);
+            this.regexCheckBox.Location = new System.Drawing.Point(108, 134);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(56, 16);
             this.regexCheckBox.TabIndex = 9;
@@ -373,7 +364,7 @@
             // replaceLabel
             // 
             this.replaceLabel.AutoSize = true;
-            this.replaceLabel.Location = new System.Drawing.Point(3, 203);
+            this.replaceLabel.Location = new System.Drawing.Point(3, 229);
             this.replaceLabel.Name = "replaceLabel";
             this.replaceLabel.Size = new System.Drawing.Size(46, 12);
             this.replaceLabel.TabIndex = 6;
@@ -391,7 +382,7 @@
             // replaceTextBox
             // 
             this.replaceTextBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.replaceTextBox.Location = new System.Drawing.Point(49, 182);
+            this.replaceTextBox.Location = new System.Drawing.Point(49, 207);
             this.replaceTextBox.Multiline = true;
             this.replaceTextBox.Name = "replaceTextBox";
             this.replaceTextBox.Size = new System.Drawing.Size(230, 55);
@@ -524,11 +515,21 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // embeddedTagsCheckBox
+            // 
+            this.embeddedTagsCheckBox.AutoSize = true;
+            this.embeddedTagsCheckBox.Location = new System.Drawing.Point(108, 156);
+            this.embeddedTagsCheckBox.Name = "embeddedTagsCheckBox";
+            this.embeddedTagsCheckBox.Size = new System.Drawing.Size(105, 16);
+            this.embeddedTagsCheckBox.TabIndex = 21;
+            this.embeddedTagsCheckBox.Text = "Embedded Tags";
+            this.embeddedTagsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ConversionFileView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(789, 291);
+            this.ClientSize = new System.Drawing.Size(789, 316);
             this.Controls.Add(this.mainSplitContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(805, 330);
@@ -597,7 +598,7 @@
         private System.Windows.Forms.GroupBox groupBox;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.CheckBox tagPairCheckBox;
-        private System.Windows.Forms.CheckBox subSegmentCheckBox;
         private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.CheckBox embeddedTagsCheckBox;
     }
 }

@@ -8,12 +8,13 @@
     public class SearchText : BindableBase
     {
         private bool caseSensitive = false;
+        private bool embeddedTags = false;
         private bool strConv = false;
+        private bool tagPair = false;
         private string text = string.Empty;
         private bool useRegex = false;
         private List<VbStrConv> vbStrConv = new List<VbStrConv>();
         private bool wholeWord = false;
-        private bool tagPair = false;
 
         [XmlElement]
         public string Text
@@ -30,10 +31,24 @@
         }
 
         [XmlElement]
+        public bool EmbeddedTags
+        {
+            get { return embeddedTags; }
+            set { SetProperty(ref embeddedTags, value); }
+        }
+
+        [XmlElement]
         public bool StrConv
         {
             get { return strConv; }
             set { SetProperty(ref strConv, value); }
+        }
+
+        [XmlElement]
+        public bool TagPair
+        {
+            get { return tagPair; }
+            set { SetProperty(ref tagPair, value); }
         }
 
         [XmlElement]
@@ -55,13 +70,6 @@
         {
             get { return wholeWord; }
             set { SetProperty(ref wholeWord, value); }
-        }
-
-        [XmlElement]
-        public bool TagPair
-        {
-            get { return tagPair; }
-            set { SetProperty(ref tagPair, value); }
         }
 
         public override bool Equals(object obj)

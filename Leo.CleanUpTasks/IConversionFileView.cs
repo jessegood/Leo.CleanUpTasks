@@ -26,13 +26,14 @@
         Button SaveButton { get; }
         string SavedFilePath { get; set; }
         TextBox Search { get; }
+        CheckBox EmbeddedTags { get; }
         CheckBox StrConv { get; }
-        CheckBox SubSegment { get; }
         CheckBox TagPair { get; }
         CheckBox ToLower { get; }
         CheckBox ToUpper { get; }
         CheckBoxComboBox VbStrConv { get; }
         CheckBox WholeWord { get; }
+
         void InitializeUI();
 
         void SetPresenter(IConversionFileViewPresenter presenter);

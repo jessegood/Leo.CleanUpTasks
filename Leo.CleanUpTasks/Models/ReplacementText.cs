@@ -9,7 +9,6 @@
         private string text = string.Empty;
         private bool toLower = false;
         private bool toUpper = false;
-        private bool subSegment = false;
 
         [XmlElement]
         public string Text
@@ -37,13 +36,6 @@
         {
             get { return placeHolder; }
             set { SetProperty(ref placeHolder, value); }
-        }
-
-        [XmlElement]
-        public bool SubSegment
-        {
-            get { return subSegment; }
-            set { SetProperty(ref subSegment, value); }
         }
 
         public override bool Equals(object obj)

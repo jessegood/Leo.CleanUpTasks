@@ -11,8 +11,9 @@
 
     public class TargetCleanUpHandler : SegmentHandlerBase, ISegmentHandler
     {
+        private readonly List<IPlaceholderTag> phTags = new List<IPlaceholderTag>();
         private readonly ICleanUpSourceSettings settings = null;
-        private readonly List<IPlaceholderTag> tags = new List<IPlaceholderTag>();
+        private readonly List<ITagPair> tagPairs = new List<ITagPair>();
 
         public TargetCleanUpHandler(ICleanUpSourceSettings settings,
                                     IDocumentItemFactory itemFactory,
@@ -32,7 +33,7 @@
             {
                 if (settings.Placeholders.Any(p => p.Content == tagContent))
                 {
-                    tags.Add(tag);
+                    phTags.Add(tag);
                 }
             }
         }
@@ -44,6 +45,21 @@
             VisitChildren(segment);
 
             ProcessPlaceholderTags();
+
+            ProcessTagPairs();
+        }
+
+        public void VisitTagPair(ITagPair tagPair)
+        {
+            var tagContent = tagPair.StartTagProperties.TagContent;
+
+            if (tagContent != null)
+            {
+                if (settings.Placeholders.Any(p => p.Content == tagContent))
+                {
+                    tagPairs.Add(tagPair);
+                }
+            }
         }
 
         private string ConvertTagToText(IPlaceholderTag tag)
@@ -75,7 +91,7 @@
 
         private void ProcessPlaceholderTags()
         {
-            foreach (var tag in tags)
+            foreach (var tag in phTags)
             {
                 var text = ConvertTagToText(tag);
 
@@ -84,8 +100,9 @@
                     var parent = tag.Parent;
                     var index = tag.IndexInParent;
 
-                    tag.RemoveFromParent();
                     var itext = CreateIText(text);
+
+                    tag.RemoveFromParent();
 
                     if (parent.Count > index)
                     {
@@ -94,6 +111,41 @@
                     else
                     {
                         parent.Add(itext);
+                    }
+                }
+            }
+        }
+
+        private void ProcessTagPairs()
+        {
+            foreach (var pair in tagPairs)
+            {
+                var startTag = CreateIText(pair.StartTagProperties.TagContent);
+                var endTag = CreateIText(pair.EndTagProperties.TagContent);
+                var parent = pair.Parent;
+
+                var index = pair.IndexInParent;
+
+                var children = pair.AllSubItems.ToList();
+                children.Insert(0, startTag);
+                children.Add(endTag);
+
+                pair.RemoveFromParent();
+
+                foreach (var item in children)
+                {
+                    if (item.Parent != null)
+                    {
+                        item.RemoveFromParent();
+                    }
+
+                    if (parent.Count > index)
+                    {
+                        parent.Insert(index++, item);
+                    }
+                    else
+                    {
+                        parent.Add(item);
                     }
                 }
             }
@@ -128,10 +180,6 @@
         }
 
         public void VisitRevisionMarker(IRevisionMarker revisionMarker)
-        {
-        }
-
-        public void VisitTagPair(ITagPair tagPair)
         {
         }
 

@@ -14,9 +14,8 @@
         private readonly IVerifyingFormattingVisitor fmtVisitor = null;
         private readonly bool phAllUnchecked = false;
         private readonly Stack<IPlaceholderTag> phTagsToRemove = new Stack<IPlaceholderTag>();
-        private readonly ICleanUpSourceSettings settings = null;
         private readonly IXmlReportGenerator reportGenerator = null;
-
+        private readonly ICleanUpSourceSettings settings = null;
         public TagHandler(ICleanUpSourceSettings settings,
                           IVerifyingFormattingVisitor fmtVisitor,
                           IDocumentItemFactory itemFactory,
@@ -64,6 +63,11 @@
             VisitChildren(segment);
 
             ProcessTags();
+
+            // Merge all adjacent IText
+            ITextMerger merger = new ITextMerger();
+            merger.VisitSegment(segment);
+            merger.Merge();
         }
 
         public void VisitTagPair(ITagPair tagPair)
@@ -90,6 +94,8 @@
                     fmtVisitor.ResetVerifier();
                 }
             }
+
+            VisitChildren(tagPair);
         }
 
         private static void ReAddSubItemsToParent(List<IAbstractMarkupData> subItemList, IAbstractMarkupDataContainer parent, int index)
@@ -119,6 +125,18 @@
             }
         }
 
+        private void Log(IAbstractMarkupData data, string tagContent)
+        {
+            IAbstractMarkupDataContainer parent = data.Parent;
+            while (!(parent is ISegment))
+            {
+                parent = ((IAbstractMarkupData)parent).Parent;
+            }
+
+            var segment = (ISegment)parent;
+            reportGenerator.AddTagItem(segment.Properties.Id.Id, tagContent);
+        }
+
         private void ProcessTags()
         {
             // Formatting tags
@@ -135,11 +153,7 @@
                 var parent = tagPair.Parent;
                 var index = tagPair.IndexInParent;
 
-                if (parent is ISegment)
-                {
-                    var segment = (ISegment)parent;
-                    reportGenerator.AddTagItem(segment.Properties.Id.Id, tagPair.TagProperties.TagContent);
-                }
+                Log(tagPair, tagPair.TagProperties.TagContent);
 
                 tagPair.RemoveFromParent();
 
@@ -151,11 +165,7 @@
             {
                 var phTag = phTagsToRemove.Pop();
 
-                if (phTag.Parent is ISegment)
-                {
-                    var segment = (ISegment)phTag.Parent;
-                    reportGenerator.AddTagItem(segment.Properties.Id.Id, phTag.TagProperties.TagContent);
-                }
+                Log(phTag, phTag.Properties.TagContent);
 
                 phTag.RemoveFromParent();
             }

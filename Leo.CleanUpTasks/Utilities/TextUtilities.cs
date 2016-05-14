@@ -107,50 +107,44 @@
             var result = string.Empty;
 
             // Regex uses current culture by default
-            try
+
+            if (isCaseSensitive)
             {
-                if (isCaseSensitive)
+                if (replacement.ToLower)
                 {
-                    if (replacement.ToLower)
-                    {
-                        result = Regex.Replace(original, search, m => m.Value.ToLower());
-                    }
-                    else if (replacement.ToUpper)
-                    {
-                        result = Regex.Replace(original, search, m => m.Value.ToUpper());
-                    }
-                    else if (strConv != null)
-                    {
-                        result = Regex.Replace(original, search, strConv);
-                    }
-                    else
-                    {
-                        result = Regex.Replace(original, search, replacement.Text);
-                    }
+                    result = Regex.Replace(original, search, m => m.Value.ToLower());
+                }
+                else if (replacement.ToUpper)
+                {
+                    result = Regex.Replace(original, search, m => m.Value.ToUpper());
+                }
+                else if (strConv != null)
+                {
+                    result = Regex.Replace(original, search, strConv);
                 }
                 else
                 {
-                    if (replacement.ToLower)
-                    {
-                        result = Regex.Replace(original, search, m => m.Value.ToLower(), RegexOptions.IgnoreCase);
-                    }
-                    else if (replacement.ToUpper)
-                    {
-                        result = Regex.Replace(original, search, m => m.Value.ToUpper(), RegexOptions.IgnoreCase);
-                    }
-                    else if (strConv != null)
-                    {
-                        result = Regex.Replace(original, search, strConv, RegexOptions.IgnoreCase);
-                    }
-                    else
-                    {
-                        result = Regex.Replace(original, search, replacement.Text, RegexOptions.IgnoreCase);
-                    }
+                    result = Regex.Replace(original, search, replacement.Text);
                 }
             }
-            catch (ArgumentException)
+            else
             {
-                //Ignore invalid expressions
+                if (replacement.ToLower)
+                {
+                    result = Regex.Replace(original, search, m => m.Value.ToLower(), RegexOptions.IgnoreCase);
+                }
+                else if (replacement.ToUpper)
+                {
+                    result = Regex.Replace(original, search, m => m.Value.ToUpper(), RegexOptions.IgnoreCase);
+                }
+                else if (strConv != null)
+                {
+                    result = Regex.Replace(original, search, strConv, RegexOptions.IgnoreCase);
+                }
+                else
+                {
+                    result = Regex.Replace(original, search, replacement.Text, RegexOptions.IgnoreCase);
+                }
             }
 
             return result;

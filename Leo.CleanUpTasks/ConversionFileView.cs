@@ -64,9 +64,9 @@
 
         public TextBox Search { get { return searchTextBox; } }
 
-        public CheckBox StrConv { get { return strConvCheckBox; } }
+        public CheckBox EmbeddedTags { get { return embeddedTagsCheckBox; } }
 
-        public CheckBox SubSegment { get { return subSegmentCheckBox; } }
+        public CheckBox StrConv { get { return strConvCheckBox; } }
 
         public CheckBox TagPair { get { return tagPairCheckBox; } }
 

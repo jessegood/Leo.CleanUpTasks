@@ -57,6 +57,15 @@
 
         public DialogResult DialogResult { get; set; }
 
+        public CheckBox EmbeddedTags
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<CheckBox>() != null);
+                return default(CheckBox);
+            }
+        }
+
         public ErrorProvider ErrorProvider
         {
             get
@@ -130,15 +139,6 @@
             }
         }
 
-        public Button SaveButton
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<Button>() != null);
-                return default(Button);
-            }
-        }
-
         public Button SaveAsButton
         {
             get
@@ -148,6 +148,14 @@
             }
         }
 
+        public Button SaveButton
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<Button>() != null);
+                return default(Button);
+            }
+        }
         public string SavedFilePath
         {
             get
@@ -179,16 +187,6 @@
                 return default(CheckBox);
             }
         }
-
-        public CheckBox SubSegment
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<CheckBox>() != null);
-                return default(CheckBox);
-            }
-        }
-
         public CheckBox TagPair
         {
             get

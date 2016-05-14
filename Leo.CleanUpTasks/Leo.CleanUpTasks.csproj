@@ -301,6 +301,8 @@
       <DependentUpon>TagsSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="TargetCleanUpHandler.cs" />
+    <Compile Include="Utilities\ITextMerger.cs" />
+    <Compile Include="Utilities\TextListUpdater.cs" />
     <Compile Include="Utilities\BindableBase.cs" />
     <Compile Include="Utilities\CleanUpMessageReporter.cs" />
     <Compile Include="Utilities\ConversionItemDescriptionProvider.cs" />
