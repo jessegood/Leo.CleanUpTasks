@@ -54,11 +54,6 @@
                 control.Settings.BackupsSaveFolder = folder;
                 control.BackupFolder.Text = folder;
             }
-            else
-            {
-                control.Settings.BackupsSaveFolder = string.Empty;
-                control.BackupFolder.Text = string.Empty;
-            }
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -76,11 +71,6 @@
             {
                 control.Settings.SaveFolder = folder;
                 control.SaveFolder.Text = folder;
-            }
-            else
-            {
-                control.Settings.SaveFolder = string.Empty;
-                control.SaveFolder.Text = string.Empty;
             }
         }
     }
