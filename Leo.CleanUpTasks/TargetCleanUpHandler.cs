@@ -60,6 +60,8 @@
                     tagPairs.Add(tagPair);
                 }
             }
+
+            VisitChildren(tagPair);
         }
 
         private string ConvertTagToText(IPlaceholderTag tag)
