@@ -4,6 +4,7 @@
     using Sdl.FileTypeSupport.Framework.IntegrationApi;
     using Sdl.ProjectAutomation.AutomaticTasks;
     using Sdl.ProjectAutomation.Core;
+    using Sdl.ProjectAutomation.Settings;
     using System;
     using System.IO;
     using System.Linq;
@@ -32,11 +33,9 @@
         {
             if (targetSettings.SaveTarget)
             {
-                Project.RunAutomaticTask(TaskFiles.GetIds(), AutomaticTaskTemplateIds.GenerateTargetTranslations);
-
                 if (!string.IsNullOrEmpty(targetSettings.SaveFolder))
                 {
-                    CopyGeneratedFiles();
+                    ExportFiles();
                 }
             }
 
@@ -118,6 +117,41 @@
             }
         }
 
+        private void ExportFiles()
+        {
+            var saveFolder = targetSettings.SaveFolder;
+
+            if (Directory.Exists(saveFolder))
+            {
+                var settings = GetSetting<ExportFilesSettings>();
+
+                // Store current settings so they can be restored later
+                var exportLocation = settings.GetSetting<string>("ExportLocation");
+                var fileVersion = settings.GetSetting<ExportFileVersion>("ExportFileVersion");
+
+                settings.BeginEdit();
+                settings.GetSetting<string>("ExportLocation").Value = saveFolder;
+                settings.GetSetting<ExportFileVersion>("ExportFileVersion").Value = ExportFileVersion.Native;
+                settings.EndEdit();
+
+                Project.UpdateSettings(settings.SettingsBundle);
+
+                try
+                {
+                    Project.RunAutomaticTask(TaskFiles.GetIds(), AutomaticTaskTemplateIds.ExportFiles);
+                }
+                finally
+                {
+                    // Restore
+                    settings.BeginEdit();
+                    settings.GetSetting<string>("ExportLocation").Value = exportLocation;
+                    settings.GetSetting<ExportFileVersion>("ExportFileVersion").Value = fileVersion;
+                    settings.EndEdit();
+
+                    Project.UpdateSettings(settings.SettingsBundle);
+                }
+            }
+        }
         private string GetProjectFolder()
         {
             var first = TaskFiles.FirstOrDefault();
