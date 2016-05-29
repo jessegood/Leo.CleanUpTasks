@@ -21,6 +21,58 @@
         }
 
         [Fact]
+        public void VisitSegmentCreatesSinglePlaceholderWithEmbeddedTags()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<.*?>",
+                                                         embeddedTags: true,
+                                                         useRegex: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("<html>", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
+            Assert.Equal(1, sourceHandler.PlaceholderList.Count);
+        }
+
+        [Fact]
+        public void VisitSegmentCreatesEmbeddedTagPairWithSoftReturns()
+        {
+            // Arrange
+            var settings = utility.CreateSettings();
+            var list = utility.CreateConversionItemLists(searchText: "<.*?>",
+                                                         embeddedTags: true,
+                                                         useRegex: true);
+            var segment = utility.CreateSegment(isLocked: false);
+            var text = utility.CreateText("<head>\n<title>\nWhen non - translatable styles were not used\n</title>\n</head>", segment);
+
+            var itemFactory = Substitute.For<IDocumentItemFactory>();
+            var reporter = Substitute.For<ICleanUpMessageReporter>();
+            var reportGenerator = Substitute.For<IXmlReportGenerator>();
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+
+            // Act
+            sourceHandler.VisitText(text);
+            sourceHandler.VisitSegment(segment);
+
+            // Assert
+            text.Received().RemoveFromParent();
+            segment.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
+            Assert.Equal(4, sourceHandler.PlaceholderList.Count);
+        }
+
+        [Fact]
         public void VisitSegmentCreatesEmbeddedTagPair()
         {
             // Arrange
@@ -41,7 +93,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             Assert.Equal(2, sourceHandler.PlaceholderList.Count);
         }
 
@@ -67,7 +119,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
         }
 
         [Fact]
@@ -92,7 +144,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             Assert.Equal(3, sourceHandler.PlaceholderList.Count);
         }
 
@@ -118,7 +170,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             Assert.Equal(5, sourceHandler.PlaceholderList.Count);
         }
 
@@ -144,7 +196,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
         }
 
         [Fact]
@@ -193,7 +245,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
         }
 
         [Fact]
@@ -218,7 +270,7 @@
 
             // Assert
             text.Received().RemoveFromParent();
-            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
         }
 
         [Fact]
@@ -241,7 +293,7 @@
             sourceHandler.VisitSegment(segment);
 
             // Assert
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -280,7 +332,7 @@
 
             // Assert
             segment.DidNotReceive().RemoveFromParent();
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -313,7 +365,7 @@
 
             // Assert
             segment.DidNotReceive().RemoveFromParent();
-            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -339,7 +391,7 @@
 
             // Assert
             segment.DidNotReceive().RemoveFromParent();
-            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -364,7 +416,7 @@
             sourceHandler.VisitSegment(segment);
 
             // Assert
-            segment.Received().Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -464,7 +516,7 @@
             sourceHandler.VisitSegment(segment);
 
             // Assert
-            tagPair.Parent.Received().Add(Arg.Any<IAbstractMarkupData>());
+            tagPair.Parent.Received().Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             tagPair.Received().RemoveFromParent();
         }
 
@@ -567,7 +619,7 @@
             sourceHandler.VisitSegment(segment);
 
             // Assert
-            segment.Received(3).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(3).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 
@@ -592,7 +644,7 @@
             sourceHandler.VisitSegment(segment);
 
             // Assert
-            segment.Received(4).Add(Arg.Any<IAbstractMarkupData>());
+            segment.Received(4).Insert(Arg.Any<int>(), Arg.Any<IAbstractMarkupData>());
             text.Received().RemoveFromParent();
         }
 

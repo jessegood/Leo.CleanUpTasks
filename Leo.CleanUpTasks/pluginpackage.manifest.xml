@@ -9,5 +9,6 @@
     <File>UIToolbox.CheckGroupBox.dll</File>
     <File>Equin.ApplicationFramework.BindingListView.dll</File>
     <File>CheckBoxComboBox.dll</File>
+    <File>HtmlAgilityPack.dll</File>
   </Include>
 </PluginPackage>

@@ -92,6 +92,7 @@
 
             var placeHolderTagProps = ItemFactory.PropertiesFactory.CreatePlaceholderTagProperties(text);
             placeHolderTagProps.TagContent = text;
+            placeHolderTagProps.TagId = new TagId(Guid.NewGuid().ToString());
 
             return CreatePlaceHolderTagInternal(text, placeHolderTagProps);
         }
@@ -102,6 +103,7 @@
 
             var startTagProps = ItemFactory.PropertiesFactory.CreateStartTagProperties(startTag);
             startTagProps.TagContent = startTag;
+            startTagProps.TagId = new TagId(Guid.NewGuid().ToString());
 
             var m = Regex.Match(startTag, @"<(\w+)\s+\w+.*?>");
             if (m.Success)

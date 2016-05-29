@@ -1,12 +1,11 @@
 ﻿namespace Leo.CleanUpTasks
 {
+    using HtmlParser;
     using Sdl.FileTypeSupport.Framework.BilingualApi;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Xml;
-    using System.Xml.Linq;
     using Utilities;
 
     public class TargetCleanUpHandler : SegmentHandlerBase, ISegmentHandler
@@ -45,6 +44,11 @@
             ProcessPlaceholderTags();
 
             ProcessTagPairs();
+
+            // Merge all adjacent IText
+            ITextMerger merger = new ITextMerger();
+            merger.VisitSegment(segment);
+            merger.Merge();
         }
 
         public void VisitTagPair(ITagPair tagPair)
@@ -62,28 +66,31 @@
             VisitChildren(tagPair);
         }
 
-        private string ConvertTagToText(IPlaceholderTag tag)
+        private string ConvertTagToText(IPlaceholderTag phTag)
         {
-            var content = tag.TagProperties.TagContent;
+            var content = phTag.TagProperties.TagContent;
 
             var text = string.Empty;
 
-            try
+            HtmlParser parser = new HtmlParser(content);
+            HtmlTag tag;
+            if (parser.ParseNext("*", out tag))
             {
-                XElement elem = XElement.Parse(content);
-
-                if (elem.HasAttributes)
+                if (tag.Attributes.Count() > 0)
                 {
-                    text = (string)elem.FirstAttribute;
+                    text = tag.Attributes.Values.First();
                 }
                 else
                 {
-                    text = elem.Name.LocalName;
+                    if (tag.HasEndTag)
+                    {
+                        text = $"</{tag.Name}>";
+                    }
+                    else
+                    {
+                        text = $"<{tag.Name}>";
+                    }
                 }
-            }
-            catch (XmlException)
-            {
-                // TODO: Log
             }
 
             return text;
@@ -104,14 +111,7 @@
 
                     tag.RemoveFromParent();
 
-                    if (parent.Count > index)
-                    {
-                        parent.Insert(index, itext);
-                    }
-                    else
-                    {
-                        parent.Add(itext);
-                    }
+                    parent.Insert(index++, itext);
                 }
             }
         }
@@ -126,11 +126,9 @@
 
                 var index = pair.IndexInParent;
 
-                var children = pair.AllSubItems.ToList();
+                var children = pair.ToList();
                 children.Insert(0, startTag);
                 children.Add(endTag);
-
-                pair.RemoveFromParent();
 
                 foreach (var item in children)
                 {
@@ -139,15 +137,10 @@
                         item.RemoveFromParent();
                     }
 
-                    if (parent.Count > index)
-                    {
-                        parent.Insert(index++, item);
-                    }
-                    else
-                    {
-                        parent.Add(item);
-                    }
+                    parent.Insert(index++, item);
                 }
+
+                pair.RemoveFromParent();
             }
         }
 

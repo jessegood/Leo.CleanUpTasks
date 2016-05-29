@@ -1,5 +1,6 @@
 ﻿namespace Leo.CleanUpTasks
 {
+    using HtmlAgilityPack;
     using Microsoft.VisualBasic;
     using Models;
     using Sdl.FileTypeSupport.Framework.BilingualApi;
@@ -141,116 +142,130 @@
             return false;
         }
 
-        private List<IAbstractMarkupData> CreateMarkupData(string input)
+        private List<IAbstractMarkupData> CreateMarkupData(string input, HtmlTagTable tagTable)
         {
             var markupList = new List<IAbstractMarkupData>();
 
-            try
+            var parser = new HtmlHelper(input, tagTable);
+
+            if (parser.ParseErrors.Count() > 0)
             {
-                var element = XElement.Parse(input);
+                return ParseTagsFallback(input, markupList);
+            }
 
-                XNode lastNode = null;
-                foreach (var node in element.DescendantNodes())
+            foreach (var node in parser.Descendants())
+            {
+                if (node.NodeType == HtmlNodeType.Element)
                 {
-                    if (lastNode != null)
+                    if (!tagTable.Table[node.Name].HasEndTag)
                     {
-                        if (node != lastNode)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            lastNode = null;
-                            continue;
-                        }
+                        var ph = parser.GetRawStartTag(node);
+                        var phTag = CreatePlaceHolderTag(ph);
+                        markupList.Add(phTag);
                     }
-
-                    if (node.NodeType == System.Xml.XmlNodeType.Text)
+                    else if (tagTable.Table[node.Name].IsEndGhostTag)
                     {
-                        var txt = ((XText)node).Value;
-                        markupList.Add(CreateIText(txt));
+                        var eTag = parser.GetRawEndTag(node);
+                        markupList.Add(CreatePlaceHolderTag(eTag));
                     }
-                    else if (node.NodeType == System.Xml.XmlNodeType.Element)
+                    else
                     {
-                        var elem = (XElement)node;
+                        var stTag = parser.GetRawStartTag(node);
 
-                        if (elem.IsEmpty)
+                        if (node.Closed)
                         {
-                            var ph = elem.ToString();
-                            StorePlaceholder(ph);
+                            var eTag = parser.GetRawEndTag(node);
+                            var startTag = CreateStartTag(stTag);
+                            var endTag = CreateEndTag(eTag);
+                            var tagPair = CreateTagPair(startTag, endTag);
 
-                            if (elem.HasAttributes)
+                            if (!ContainsTags(node.InnerHtml))
                             {
-                                var phTag = CreatePlaceHolderTag(ph);
-                                markupList.Add(phTag);
+                                var itext = CreateIText(node.InnerHtml);
+                                tagPair.Add(itext);
+
+                                // Experimental:
+                                // Creation of new formatting
+                                CreateNewFormatting(node, tagPair);
                             }
                             else
                             {
-                                var phTag = CreatePlaceHolderTag(ph);
-                                markupList.Add(phTag);
+                                var list = CreateMarkupData(node.InnerHtml, tagTable);
+
+                                foreach (var item in list)
+                                {
+                                    tagPair.Add(item);
+                                }
                             }
+
+                            markupList.Add(tagPair);
                         }
                         else
                         {
-                            var rawText = elem.ToString();
-                            var match = Regex.Match(rawText, @"(<(.+?)\b.*?>)(.+?)(<\/\s*\2>)", RegexOptions.IgnoreCase);
+                            var phTag = CreatePlaceHolderTag(stTag);
+                            markupList.Add(phTag);
 
-                            if (match.Success)
+                            var list = CreateMarkupData(node.InnerHtml, tagTable);
+
+                            foreach (var item in list)
                             {
-                                var startTag = CreateStartTag(match.Groups[1].Value);
-                                var endTag = CreateEndTag(match.Groups[4].Value);
-                                var tagPair = CreateTagPair(startTag, endTag);
-
-                                var text = match.Groups[3].Value;
-
-                                if (!ContainsTags(text))
-                                {
-                                    var itext = CreateIText(match.Groups[3].Value);
-                                    tagPair.Add(itext);
-
-                                    // Experimental:
-                                    // Creation of new formatting
-                                    var xml = XElement.Parse(rawText);
-                                    if (xml.Name == "cf" && xml.HasAttributes)
-                                    {
-                                        var formattingGroup = CreateFormattingGroup();
-
-                                        foreach (var attrib in xml.Attributes())
-                                        {
-                                            formattingGroup.Add(CreateFormattingItem(attrib.Name.LocalName, attrib.Value));
-                                        }
-
-                                        tagPair.StartTagProperties.Formatting = formattingGroup;
-                                    }
-
-                                    markupList.Add(tagPair);
-                                }
-                                else
-                                {
-                                    var wrappedText = string.Concat("<root>", text, "</root>");
-                                    var list = CreateMarkupData(wrappedText);
-
-                                    foreach (var item in list)
-                                    {
-                                        tagPair.Add(item);
-                                    }
-
-                                    markupList.Add(tagPair);
-                                }
-
-                                // Store last node so we can skip over all child nodes
-                                lastNode = elem.LastNode;
+                                markupList.Add(item);
                             }
                         }
+
+                        node.RemoveAllChildren();
                     }
                 }
-            }
-            catch (System.Xml.XmlException)
-            {
-                Reporter.Report(this, ErrorLevel.Warning, $"Invalid xml: {input}", input);
+                else if (node.NodeType == HtmlNodeType.Text)
+                {
+                    markupList.Add(CreateIText(node.InnerText));
+                }
+                else
+                {
+                    markupList.Add(CreateIText(node.InnerHtml));
+                }
             }
 
             return markupList;
+        }
+
+        private List<IAbstractMarkupData> ParseTagsFallback(string input, List<IAbstractMarkupData> markupList)
+        {
+            // Fall back on regex parsing
+            foreach (var chunk in Regex.Split(input, "(<.+?>)"))
+            {
+                if (string.IsNullOrEmpty(chunk))
+                {
+                    continue;
+                }
+
+                if (Regex.IsMatch(chunk, "<.+?>"))
+                {
+                    var phTag = CreatePlaceHolderTag(chunk);
+                    markupList.Add(phTag);
+                }
+                else
+                {
+                    markupList.Add(CreateIText(chunk));
+                }
+            }
+
+            return markupList;
+        }
+
+        private void CreateNewFormatting(HtmlNode node, ITagPair tagPair)
+        {
+            if (node.Name == "cf" && node.HasAttributes)
+            {
+                var formattingGroup = CreateFormattingGroup();
+
+                foreach (var attrib in node.Attributes)
+                {
+                    formattingGroup.Add(CreateFormattingItem(attrib.OriginalName, attrib.Value));
+                }
+
+                tagPair.StartTagProperties.Formatting = formattingGroup;
+            }
         }
 
         private void CreatePlaceHolder(string updatedText, IText itext, string replacementText)
@@ -305,29 +320,12 @@
                             {
                                 StorePlaceholder(phMatch.Value);
 
-                                if (parent.Count > index)
-                                {
-                                    parent.Insert(index++, phTag);
-                                }
-                                else
-                                {
-                                    parent.Add(phTag);
-                                }
+                                parent.Insert(index++, phTag);
                             }
                         }
                         else
                         {
-                            if (parent.Count > index)
-                            {
-                                if (index >= 0)
-                                {
-                                    parent.Insert(index++, CreateIText(item));
-                                }
-                            }
-                            else
-                            {
-                                parent.Add(CreateIText(item));
-                            }
+                            parent.Insert(index++, CreateIText(item));
                         }
                     }
 
@@ -351,9 +349,7 @@
 
         private void CreateTagPair(string updatedText, IText itext, IAbstractMarkupDataContainer parent)
         {
-            var input = string.Concat("<root>", updatedText, "</root>");
-
-            var markupData = CreateMarkupData(input);
+            var markupData = CreateMarkupData(updatedText, new HtmlTagTable(updatedText));
 
             var index = itext.IndexInParent;
 
@@ -361,17 +357,7 @@
             {
                 foreach (var item in markupData)
                 {
-                    if (parent.Count > index)
-                    {
-                        if (index >= 0)
-                        {
-                            parent.Insert(index++, item);
-                        }
-                    }
-                    else
-                    {
-                        parent.Add(item);
-                    }
+                    parent.Insert(index++, item);
                 }
 
                 itext.RemoveFromParent();
@@ -494,22 +480,6 @@
             }
         }
 
-        private void StoreTagPair(string original)
-        {
-            var matches = Regex.Matches(original, "<.+?>");
-            foreach (Match m in matches)
-            {
-                var tag = m.Value;
-                var index = m.Value.LastIndexOf("/>");
-                if (index > -1 && m.Value[index - 1] != ' ')
-                {
-                    tag = m.Value.Insert(index, " ");
-                }
-
-                StorePlaceholder(tag, true);
-            }
-        }
-
         private void ProcessText(ConversionItem item, ISegment segment)
         {
             Contract.Requires<ArgumentNullException>(item != null);
@@ -541,9 +511,7 @@
 
         private void ReplaceTagPair(string updatedText, ITagPair tagPair, IAbstractMarkupDataContainer parent)
         {
-            var input = string.Concat("<root>", updatedText, "</root>");
-
-            var markupData = CreateMarkupData(input);
+            var markupData = CreateMarkupData(updatedText, new HtmlTagTable(updatedText));
 
             var index = tagPair.IndexInParent;
 
@@ -551,17 +519,7 @@
             {
                 foreach (var item in markupData)
                 {
-                    if (parent.Count > index)
-                    {
-                        if (index >= 0)
-                        {
-                            parent.Insert(index++, item);
-                        }
-                    }
-                    else
-                    {
-                        parent.Add(item);
-                    }
+                    parent.Insert(index++, item);
                 }
 
                 tagPair.RemoveFromParent();
@@ -592,6 +550,22 @@
             if (!placeholderList.Any(p => p.Content.Contains(value)))
             {
                 placeholderList.Add(new Placeholder() { Content = value, IsTagPair = isTagPair });
+            }
+        }
+
+        private void StoreTagPair(string original)
+        {
+            var matches = Regex.Matches(original, "<.+?>");
+            foreach (Match m in matches)
+            {
+                var tag = m.Value;
+                var index = m.Value.LastIndexOf("/>");
+                if (index > -1 && m.Value[index - 1] != ' ')
+                {
+                    tag = m.Value.Insert(index, " ");
+                }
+
+                StorePlaceholder(tag, true);
             }
         }
 
@@ -847,9 +821,7 @@
 
             if (match.Success)
             {
-                var input = string.Concat("<root>", match.Groups[2].Value, "</root>");
-
-                var markupData = CreateMarkupData(input);
+                var markupData = CreateMarkupData(match.Groups[2].Value, new HtmlTagTable(match.Groups[2].Value));
 
                 if (markupData.Count > 0)
                 {
@@ -954,6 +926,10 @@
             }
         }
 
+        private string WrapInTags(string input)
+        {
+            return string.Concat("<root>", input, "</root>");
+        }
         #region Not Used
 
         public void VisitCommentMarker(ICommentMarker commentMarker)

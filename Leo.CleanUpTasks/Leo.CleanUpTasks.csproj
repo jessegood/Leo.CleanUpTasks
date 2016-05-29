@@ -63,10 +63,9 @@
     </CodeContractsExtraRewriteOptions>
     <CodeContractsExtraAnalysisOptions>
     </CodeContractsExtraAnalysisOptions>
-    <CodeContractsSQLServerOption>
-    </CodeContractsSQLServerOption>
+    <CodeContractsSQLServerOption>%28localdb%29\V11.0</CodeContractsSQLServerOption>
     <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
     <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
     <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
     <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
@@ -130,6 +129,10 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\SDL\SDL Trados Studio\Studio4\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Sdl.Core.Globalization">
@@ -301,7 +304,10 @@
       <DependentUpon>TagsSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="TargetCleanUpHandler.cs" />
+    <Compile Include="Utilities\HtmlHelper.cs" />
+    <Compile Include="Utilities\HtmlParser.cs" />
     <Compile Include="Utilities\ITextMerger.cs" />
+    <Compile Include="Utilities\HtmlTagTable.cs" />
     <Compile Include="Utilities\TextListUpdater.cs" />
     <Compile Include="Utilities\BindableBase.cs" />
     <Compile Include="Utilities\CleanUpMessageReporter.cs" />
@@ -332,6 +338,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Leo.CleanUpTasks.snk" />
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\ConversionItem.datasource" />
     <None Include="Properties\DataSources\Leo.CleanUpTasks.Models.ConversionItem.datasource" />
     <None Include="Properties\DataSources\Leo.CleanUpTasks.Models.ConversionItemList.datasource" />
@@ -372,7 +379,7 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <CreatePluginPackage>true</CreatePluginPackage>
+    <CreatePluginPackage>false</CreatePluginPackage>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
