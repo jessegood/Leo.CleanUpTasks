@@ -73,6 +73,23 @@
                     source.AcceptVisitor(handler);
                 }
             }
+
+            if (!paragraphUnit.SegmentPairs.Any() && settings.ApplyToNonTranslatables)
+            {
+                var source = paragraphUnit.Source;
+
+                if (source != null)
+                {
+                    var nonTranslatableHandler = new NonTranslatableHandler(settings, LoadConversionFiles(), reportGenerator);
+
+                    foreach (var item in source)
+                    {
+                        item.AcceptVisitor(nonTranslatableHandler);
+                    }
+
+                    nonTranslatableHandler.ProcessText();
+                }
+            }
         }
 
         public override void SetFileProperties(IFileProperties fileInfo)

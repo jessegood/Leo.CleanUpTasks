@@ -280,6 +280,7 @@
     <Compile Include="Models\SearchText.cs" />
     <Compile Include="Models\TagTable.cs" />
     <Compile Include="Models\VbStrConvHolder.cs" />
+    <Compile Include="NonTranslatableHandler.cs" />
     <Compile Include="Properties\PluginProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveToTargetPreProcessor.cs" />

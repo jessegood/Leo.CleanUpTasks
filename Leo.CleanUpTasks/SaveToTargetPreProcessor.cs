@@ -44,6 +44,23 @@
                 target.AcceptVisitor(new TargetCleanUpHandler(sourceSettings, ItemFactory, reporter));
                 target.AcceptVisitor(new ConversionCleanupHandler(targetSettings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator, BatchTaskMode.Target));
             }
+
+            if (!paragraphUnit.SegmentPairs.Any() && sourceSettings.ApplyToNonTranslatables)
+            {
+                var target = paragraphUnit.Target;
+
+                if (target != null)
+                {
+                    var nonTranslatableHandler = new NonTranslatableHandler(targetSettings, LoadConversionFiles(), reportGenerator);
+
+                    foreach (var item in target)
+                    {
+                        item.AcceptVisitor(nonTranslatableHandler);
+                    }
+
+                    nonTranslatableHandler.ProcessText();
+                }
+            }
         }
 
         public override void SetFileProperties(IFileProperties fileInfo)

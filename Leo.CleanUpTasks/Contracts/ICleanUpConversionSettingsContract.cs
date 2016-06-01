@@ -9,6 +9,8 @@
     [ContractClassFor(typeof(ICleanUpConversionSettings))]
     internal abstract class ICleanUpConversionSettingsContract : ICleanUpConversionSettings
     {
+        public bool ApplyToNonTranslatables { get; set; }
+
         public Dictionary<string, bool> ConversionFiles
         {
             get

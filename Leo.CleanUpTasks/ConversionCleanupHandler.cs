@@ -936,6 +936,7 @@
         {
             return string.Concat("<root>", input, "</root>");
         }
+
         #region Not Used
 
         public void VisitCommentMarker(ICommentMarker commentMarker)

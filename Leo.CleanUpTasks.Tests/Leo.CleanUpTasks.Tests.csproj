@@ -78,6 +78,7 @@
     <Compile Include="ConversionSettingsPresenterTests.cs" />
     <Compile Include="HtmlParserTests.cs" />
     <Compile Include="LockHandlerTests.cs" />
+    <Compile Include="NonTranslatableHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConversionCleanUpHandlerTests.cs" />
     <Compile Include="TagHandlerTests.cs" />

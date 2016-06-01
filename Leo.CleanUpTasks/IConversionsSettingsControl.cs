@@ -14,6 +14,7 @@
         Button Remove { get; }
         ICleanUpConversionSettings Settings { get; set; }
         Button Up { get; }
+        CheckBox ApplyToNonTranslatables { get; }
         void InitializeUI();
         void SaveSettings();
         void SetPresenter(IConversionsSettingsPresenter presenter);

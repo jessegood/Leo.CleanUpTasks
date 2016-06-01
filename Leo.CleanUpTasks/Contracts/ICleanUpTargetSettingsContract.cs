@@ -9,6 +9,8 @@
     [ContractClassFor(typeof(ICleanUpTargetSettings))]
     internal abstract class ICleanUpTargetSettingsContract : ICleanUpTargetSettings
     {
+        public bool ApplyToNonTranslatables { get; set; }
+
         public string BackupsSaveFolder
         {
             get

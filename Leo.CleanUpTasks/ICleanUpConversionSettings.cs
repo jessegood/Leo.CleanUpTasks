@@ -10,5 +10,6 @@
         Dictionary<string, bool> ConversionFiles { get; set; }
         string LastFileDirectory { get; set; }
         bool UseConversionSettings { get; set; }
+        bool ApplyToNonTranslatables { get; set; }
     }
 }

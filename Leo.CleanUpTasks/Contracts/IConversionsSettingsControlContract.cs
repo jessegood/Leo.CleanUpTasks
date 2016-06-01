@@ -84,6 +84,15 @@
             }
         }
 
+        public CheckBox ApplyToNonTranslatables
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<CheckBox>() != null);
+                return default(CheckBox);
+            }
+        }
+
         public void InitializeUI()
         {
         }

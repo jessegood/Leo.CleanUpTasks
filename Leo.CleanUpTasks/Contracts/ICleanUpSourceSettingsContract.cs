@@ -11,6 +11,8 @@
     [ContractClassFor(typeof(ICleanUpSourceSettings))]
     internal abstract class ICleanUpSourceSettingsContract : ICleanUpSourceSettings
     {
+        public bool ApplyToNonTranslatables { get; set; }
+
         public Dictionary<string, bool> ConversionFiles { get; set; }
 
         public Dictionary<string, bool> FormatTagList

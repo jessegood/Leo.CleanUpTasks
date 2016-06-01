@@ -34,6 +34,12 @@
 
         #region ConversionsSettingsControl
 
+        public bool ApplyToNonTranslatables
+        {
+            get { return GetSetting<bool>(nameof(ApplyToNonTranslatables)); }
+            set { GetSetting<bool>(nameof(ApplyToNonTranslatables)).Value = value; }
+        }
+
         public Dictionary<string, bool> ConversionFiles
         {
             get { return GetSetting<Dictionary<string, bool>>(nameof(ConversionFiles)); }
@@ -108,6 +114,9 @@
 
                 case nameof(UseConversionSettings):
                     return true;
+
+                case nameof(ApplyToNonTranslatables):
+                    return false;
 
                 case nameof(FormatTagList):
                     return new Dictionary<string, bool>()

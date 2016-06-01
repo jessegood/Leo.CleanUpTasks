@@ -40,6 +40,8 @@
 
         public Button Up { get { return upButton; } }
 
+        public CheckBox ApplyToNonTranslatables { get { return useOnTranslatableCheckBox; } }
+
         public void SaveSettings()
         {
             presenter.SaveSettings();
@@ -54,6 +56,10 @@
         {
             SettingsBinder.DataBindSetting<bool>(convCheckGroupBox, "Checked", settings.Settings,
                                                  nameof(settings.UseConversionSettings));
+
+            SettingsBinder.DataBindSetting<bool>(useOnTranslatableCheckBox, "Checked", settings.Settings,
+                                                 nameof(settings.ApplyToNonTranslatables));
+
             Settings = settings;
             this.taskMode = taskMode;
         }

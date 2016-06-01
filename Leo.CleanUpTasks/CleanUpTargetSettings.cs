@@ -8,6 +8,12 @@
 
     public class CleanUpTargetSettings : SettingsGroup, ICleanUpTargetSettings
     {
+        public bool ApplyToNonTranslatables
+        {
+            get { return GetSetting<bool>(nameof(ApplyToNonTranslatables)); }
+            set { GetSetting<bool>(nameof(ApplyToNonTranslatables)).Value = value; }
+        }
+
         public string BackupsSaveFolder
         {
             get { return GetSetting<string>(nameof(BackupsSaveFolder)); }
@@ -65,6 +71,9 @@
         {
             switch (settingId)
             {
+                case nameof(ApplyToNonTranslatables):
+                    return false;
+
                 case nameof(BackupsSaveFolder):
                     return string.Empty;
 
