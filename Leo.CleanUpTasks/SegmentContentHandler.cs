@@ -74,7 +74,7 @@
                 }
             }
 
-            if (!paragraphUnit.SegmentPairs.Any() && settings.ApplyToNonTranslatables)
+            if (settings.ApplyToNonTranslatables)
             {
                 var source = paragraphUnit.Source;
 
@@ -84,7 +84,10 @@
 
                     foreach (var item in source)
                     {
-                        item.AcceptVisitor(nonTranslatableHandler);
+                        if (!(item is ISegment))
+                        {
+                            item.AcceptVisitor(nonTranslatableHandler);
+                        }
                     }
 
                     nonTranslatableHandler.ProcessText();

@@ -8,6 +8,7 @@
     using Utilities;
     using System;
     using System.Linq;
+
     [AutomaticTask("Cleanup Source",
     "Cleanup Source",
     "Cleans up source segments before translation",

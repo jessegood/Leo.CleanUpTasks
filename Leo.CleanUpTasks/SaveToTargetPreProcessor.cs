@@ -45,7 +45,7 @@
                 target.AcceptVisitor(new ConversionCleanupHandler(targetSettings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator, BatchTaskMode.Target));
             }
 
-            if (!paragraphUnit.SegmentPairs.Any() && sourceSettings.ApplyToNonTranslatables)
+            if (targetSettings.ApplyToNonTranslatables)
             {
                 var target = paragraphUnit.Target;
 
@@ -55,7 +55,10 @@
 
                     foreach (var item in target)
                     {
-                        item.AcceptVisitor(nonTranslatableHandler);
+                        if (!(item is ISegment))
+                        {
+                            item.AcceptVisitor(nonTranslatableHandler);
+                        }
                     }
 
                     nonTranslatableHandler.ProcessText();
