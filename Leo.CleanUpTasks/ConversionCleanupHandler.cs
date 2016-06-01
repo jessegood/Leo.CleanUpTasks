@@ -23,12 +23,14 @@
         private readonly ISettings settings = null;
         private readonly List<ITagPair> tagPairList = new List<ITagPair>();
         private List<Tuple<string, IText>> textList = new List<Tuple<string, IText>>();
+        private readonly BatchTaskMode taskMode;
 
         public ConversionCleanupHandler(ISettings settings,
                                     List<ConversionItemList> conversionItems,
                                     IDocumentItemFactory itemFactory,
                                     ICleanUpMessageReporter reporter,
-                                    IXmlReportGenerator reportGenerator)
+                                    IXmlReportGenerator reportGenerator,
+                                    BatchTaskMode taskMode)
             : base(itemFactory, reporter)
         {
             Contract.Requires<ArgumentNullException>(settings != null);
@@ -38,6 +40,7 @@
             this.settings = settings;
             conversionItemLists = conversionItems;
             this.reportGenerator = reportGenerator;
+            this.taskMode = taskMode;
         }
 
         public List<Placeholder> PlaceholderList { get { return placeholderList; } }
@@ -320,7 +323,10 @@
                             {
                                 StorePlaceholder(phMatch.Value);
 
-                                parent.Insert(index++, phTag);
+                                if (index >= 0)
+                                {
+                                    parent.Insert(index++, phTag);
+                                }
                             }
                         }
                         else
@@ -414,7 +420,7 @@
             var search = item.Search;
             var replacement = item.Replacement;
 
-            if (search.EmbeddedTags)
+            if (search.EmbeddedTags && taskMode == BatchTaskMode.Source)
             {
                 bool result = false;
 
@@ -441,7 +447,7 @@
                     StoreTagPair(original);
                 }
             }
-            else if (replacement.Placeholder)
+            else if (replacement.Placeholder && taskMode == BatchTaskMode.Source)
             {
                 string updatedText;
                 bool result = false;
@@ -466,7 +472,7 @@
                     CreatePlaceHolder(updatedText, itext, replacement.Text);
                 }
             }
-            else
+            else if (!search.TagPair && !search.EmbeddedTags && !replacement.Placeholder)
             {
                 string convertedText;
                 var replaceSuccessful = TryReplaceString(original, item, search, out convertedText);
@@ -484,7 +490,7 @@
         {
             Contract.Requires<ArgumentNullException>(item != null);
 
-            if (item.Search.TagPair)
+            if (item.Search.TagPair && taskMode == BatchTaskMode.Source)
             {
                 TagPairUpdate(item);
                 return;

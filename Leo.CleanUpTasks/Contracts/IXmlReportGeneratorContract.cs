@@ -11,7 +11,8 @@
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(segmentNumber));
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(before));
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(after));
+            // After text maybe empty
+            Contract.Requires<ArgumentNullException>(after != null);
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(searchText));
             // Replacement text maybe empty
             Contract.Requires<ArgumentNullException>(replaceText != null);

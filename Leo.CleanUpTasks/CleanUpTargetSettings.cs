@@ -78,7 +78,7 @@
                     return false;
 
                 case nameof(SaveFolder):
-                    return string.Empty;
+                    return Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
                 case nameof(ConversionFiles):
                     return new Dictionary<string, bool>();

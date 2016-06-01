@@ -117,7 +117,7 @@
 
             if (settings.UseConversionSettings)
             {
-                handlers.Add(new ConversionCleanupHandler(settings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator));
+                handlers.Add(new ConversionCleanupHandler(settings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator, BatchTaskMode.Source));
             }
 
             return handlers;

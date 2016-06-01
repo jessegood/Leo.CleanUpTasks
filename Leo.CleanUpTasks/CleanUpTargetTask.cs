@@ -167,9 +167,9 @@
                 {
                     foreach (var file in TaskFiles)
                     {
-                        var originalPath = Path.Combine(saveFolder, file.Name + ".sdlxliff");
+                        var originalPath = Path.Combine(saveFolder, file.Name);
 
-                        File.Copy(originalPath, file.LocalFilePath + ".sdlxliff", true);
+                        File.Copy(originalPath, file.LocalFilePath, true);
                     }
                 }
                 catch (Exception)

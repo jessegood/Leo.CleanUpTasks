@@ -17,7 +17,7 @@
         {
             var list = new List<ConversionItemList>();
 
-            Assert.Throws<ArgumentNullException>(() => new ConversionCleanupHandler(null, list, null, null, null));
+            Assert.Throws<ArgumentNullException>(() => new ConversionCleanupHandler(null, list, null, null, null, BatchTaskMode.Source));
         }
 
         [Fact]
@@ -34,7 +34,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -60,7 +60,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -85,7 +85,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -111,7 +111,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -136,7 +136,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -162,7 +162,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -188,7 +188,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -212,7 +212,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -237,7 +237,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -262,7 +262,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -286,7 +286,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -324,7 +324,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -357,7 +357,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -383,7 +383,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -409,7 +409,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -434,7 +434,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -458,7 +458,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -482,7 +482,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -509,7 +509,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitTagPair(tagPair);
@@ -537,7 +537,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitTagPair(tagPair);
@@ -564,7 +564,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitTagPair(tagPair);
@@ -588,7 +588,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -612,7 +612,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -637,7 +637,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -660,7 +660,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitSegment(segment);
@@ -682,7 +682,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -706,7 +706,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -732,7 +732,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text1);
@@ -757,7 +757,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -782,7 +782,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -808,7 +808,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -834,7 +834,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -860,7 +860,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -885,7 +885,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -911,7 +911,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitText(text);
@@ -945,7 +945,7 @@
             var itemFactory = Substitute.For<IDocumentItemFactory>();
             var reporter = Substitute.For<ICleanUpMessageReporter>();
             var reportGenerator = Substitute.For<IXmlReportGenerator>();
-            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator);
+            var sourceHandler = new ConversionCleanupHandler(settings, list, itemFactory, reporter, reportGenerator, BatchTaskMode.Source);
 
             // Act
             sourceHandler.VisitTagPair(tagPair);

@@ -18,6 +18,7 @@
         private int conversionCount = 0;
         private int segmentLockCount = 0;
         private int tagRemoveCount = 0;
+
         public XmlReportGenerator(string logFolder)
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(logFolder));

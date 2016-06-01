@@ -199,8 +199,10 @@
             {
                 view.Placeholder.Enabled = false;
                 view.TagPair.Enabled = false;
+                view.EmbeddedTags.Enabled = false;
                 view.Placeholder.Visible = false;
                 view.TagPair.Visible = false;
+                view.EmbeddedTags.Visible = false;
             }
         }
 

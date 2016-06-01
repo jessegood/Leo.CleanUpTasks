@@ -137,7 +137,10 @@
                         item.RemoveFromParent();
                     }
 
-                    parent.Insert(index++, item);
+                    if (index >= 0)
+                    {
+                        parent.Insert(index++, item);
+                    }
                 }
 
                 pair.RemoveFromParent();

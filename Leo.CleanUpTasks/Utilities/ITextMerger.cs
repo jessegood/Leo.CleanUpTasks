@@ -34,6 +34,13 @@
             }
         }
 
+        public void VisitPlaceholderTag(IPlaceholderTag tag)
+        {
+            // When we encounter a IPlaceholderTag, we set
+            // createNewList to true
+            createNewList = true;
+        }
+
         public void VisitSegment(ISegment segment)
         {
             VisitChildren(segment);
@@ -88,10 +95,6 @@
         }
 
         public void VisitOtherMarker(IOtherMarker marker)
-        {
-        }
-
-        public void VisitPlaceholderTag(IPlaceholderTag tag)
         {
         }
 

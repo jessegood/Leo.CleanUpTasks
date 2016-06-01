@@ -42,9 +42,7 @@
                 var target = segPair.Target;
 
                 target.AcceptVisitor(new TargetCleanUpHandler(sourceSettings, ItemFactory, reporter));
-                // List<ConversionItemList> conversionItems
-                // xmlgeneratorreporter
-                target.AcceptVisitor(new ConversionCleanupHandler(targetSettings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator));
+                target.AcceptVisitor(new ConversionCleanupHandler(targetSettings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator, BatchTaskMode.Target));
             }
         }
 

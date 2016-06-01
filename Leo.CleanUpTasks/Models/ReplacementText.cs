@@ -38,6 +38,9 @@
             set { SetProperty(ref placeHolder, value); }
         }
 
+        [XmlAttribute("space", Namespace = "http://www.w3.org/XML/1998/namespace")]
+        public string Space { get; set; } = "preserve";
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
