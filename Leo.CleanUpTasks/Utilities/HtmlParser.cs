@@ -222,8 +222,12 @@ namespace HtmlParser
                         SkipWhitespace();
                     }
 
-                    tag.AttributesHasDoubleQuotes = hasDoubleQuote;
-                    tag.AttributesHasSingleQuotes = hasSingleQuote;
+                    if (tag != null)
+                    {
+                        tag.AttributesHasDoubleQuotes = hasDoubleQuote;
+                        tag.AttributesHasSingleQuotes = hasSingleQuote;
+                    }
+
                     // Add attribute to collection if requested tag
                     if (requested)
                     {
@@ -311,8 +315,12 @@ namespace HtmlParser
                         SkipWhitespace();
                     }
 
-                    tag.AttributesHasDoubleQuotes = hasDoubleQuote;
-                    tag.AttributesHasSingleQuotes = hasSingleQuote;
+                    if (tag != null)
+                    {
+                        tag.AttributesHasDoubleQuotes = hasDoubleQuote;
+                        tag.AttributesHasSingleQuotes = hasSingleQuote;
+                    }
+
                     // Add attribute to collection if requested tag
                     if (requested)
                     {

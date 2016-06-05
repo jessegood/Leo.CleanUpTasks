@@ -34,7 +34,7 @@
                 new Placeholder()
                 {
                     Content = "<locked name=\"some text\">",
-                    IsTagPair = true
+                    IsTagPair = false
                 }
             };
 
