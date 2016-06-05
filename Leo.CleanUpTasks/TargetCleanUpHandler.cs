@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Utilities;
 
     public class TargetCleanUpHandler : SegmentHandlerBase, ISegmentHandler
@@ -30,7 +31,8 @@
 
             if (tagContent != null)
             {
-                if (settings.Placeholders.Any(p => p.Content == tagContent))
+                // Remove spacing before performing comparison
+                if (settings.Placeholders.Any(p => Regex.Replace(p.Content, @"\s", "") == Regex.Replace(tagContent, @"\s", "")))
                 {
                     phTags.Add(tag);
                 }
@@ -57,7 +59,8 @@
 
             if (tagContent != null)
             {
-                if (settings.Placeholders.Any(p => p.Content == tagContent))
+                // Remove spacing before performing comparison
+                if (settings.Placeholders.Any(p => Regex.Replace(p.Content, @"\s", "") == Regex.Replace(tagContent, @"\s", "")))
                 {
                     tagPairs.Add(tagPair);
                 }
@@ -78,7 +81,15 @@
             {
                 if (tag.Attributes.Count() > 0)
                 {
-                    text = tag.Attributes.Values.First();
+                    var isTagPair = settings.Placeholders.Where(p => p.Content == content).First().IsTagPair;
+                    if (isTagPair)
+                    {
+                        text = content;    
+                    }
+                    else
+                    {
+                        text = tag.Attributes.Values.First();
+                    }
                 }
                 else
                 {

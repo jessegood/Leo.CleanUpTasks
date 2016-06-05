@@ -22,6 +22,8 @@
             document.OptionWriteEmptyNodes = true;
             document.OptionAutoCloseOnEnd = false;
             document.OptionFixNestedTags = false;
+            document.OptionOutputAsXml = false;
+            document.OptionOutputOptimizeAttributeValues = false;
             document.LoadHtml(input);
 
             this.tagTable = tagTable;
@@ -53,13 +55,33 @@
             {
                 builder.Append(" ");
                 var count = node.Attributes.Count;
+                var outerHTML = node.OuterHtml;
 
                 foreach (var attrib in node.Attributes)
                 {
-                    builder.Append(attrib.Name);
-                    builder.Append("=\"");
+                    builder.Append(attrib.OriginalName);
+
+                    builder.Append("=");
+
+                    if (tagTable.Table[node.OriginalName].AttributesHasSingleQuotes)
+                    {
+                        builder.Append("'");
+                    }
+                    else if (tagTable.Table[node.OriginalName].AttributesHasDoubleQuotes)
+                    {
+                        builder.Append("\"");
+                    }
+
                     builder.Append(attrib.Value);
-                    builder.Append("\"");
+
+                    if (tagTable.Table[node.OriginalName].AttributesHasSingleQuotes)
+                    {
+                        builder.Append("'");
+                    }
+                    else if (tagTable.Table[node.OriginalName].AttributesHasDoubleQuotes)
+                    {
+                        builder.Append("\"");
+                    }
 
                     count -= 1;
                     if (count != 0)

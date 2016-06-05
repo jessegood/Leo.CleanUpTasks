@@ -160,13 +160,13 @@
             {
                 if (node.NodeType == HtmlNodeType.Element)
                 {
-                    if (!tagTable.Table[node.Name].HasEndTag)
+                    if (!tagTable.Table[node.OriginalName].HasEndTag)
                     {
                         var ph = parser.GetRawStartTag(node);
                         var phTag = CreatePlaceHolderTag(ph);
                         markupList.Add(phTag);
                     }
-                    else if (tagTable.Table[node.Name].IsEndGhostTag)
+                    else if (tagTable.Table[node.OriginalName].IsEndGhostTag)
                     {
                         var eTag = parser.GetRawEndTag(node);
                         markupList.Add(CreatePlaceHolderTag(eTag));
@@ -184,8 +184,11 @@
 
                             if (!ContainsTags(node.InnerHtml))
                             {
-                                var itext = CreateIText(node.InnerHtml);
-                                tagPair.Add(itext);
+                                if (!string.IsNullOrEmpty(node.InnerHtml))
+                                {
+                                    var itext = CreateIText(node.InnerHtml);
+                                    tagPair.Add(itext);
+                                }
 
                                 // Experimental:
                                 // Creation of new formatting

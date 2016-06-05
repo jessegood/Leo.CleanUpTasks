@@ -35,6 +35,16 @@ namespace HtmlParser
         /// Is an end tag with missing start tag
         /// </summary>
         public bool IsEndGhostTag { get; set; }
+
+        /// <summary>
+        /// True if attributes have single quotes
+        /// </summary>
+        public bool AttributesHasSingleQuotes { get; set; }
+
+        /// <summary>
+        /// True if attributes have double quotes
+        /// </summary>
+        public bool AttributesHasDoubleQuotes { get; set; }
     };
 
     public class HtmlParser
@@ -196,8 +206,11 @@ namespace HtmlParser
                 }
                 else
                 {
+                    bool hasDoubleQuote = false;
+                    bool hasSingleQuote = false;
+
                     // Parse attribute name
-                    s = (!doctype) ? ParseAttributeName() : ParseAttributeValue();
+                    s = (!doctype) ? ParseAttributeName() : ParseAttributeValue(out hasDoubleQuote, out hasSingleQuote);
                     SkipWhitespace();
                     // Parse attribute value
                     string value = String.Empty;
@@ -205,9 +218,12 @@ namespace HtmlParser
                     {
                         Move();
                         SkipWhitespace();
-                        value = ParseAttributeValue();
+                        value = ParseAttributeValue(out hasDoubleQuote, out hasSingleQuote);
                         SkipWhitespace();
                     }
+
+                    tag.AttributesHasDoubleQuotes = hasDoubleQuote;
+                    tag.AttributesHasSingleQuotes = hasSingleQuote;
                     // Add attribute to collection if requested tag
                     if (requested)
                     {
@@ -279,8 +295,11 @@ namespace HtmlParser
                 }
                 else
                 {
+                    bool hasDoubleQuote = false;
+                    bool hasSingleQuote = false;
+
                     // Parse attribute name
-                    s = (!doctype) ? ParseAttributeName() : ParseAttributeValue();
+                    s = (!doctype) ? ParseAttributeName() : ParseAttributeValue(out hasDoubleQuote, out hasSingleQuote);
                     SkipWhitespace();
                     // Parse attribute value
                     string value = String.Empty;
@@ -288,9 +307,12 @@ namespace HtmlParser
                     {
                         Move();
                         SkipWhitespace();
-                        value = ParseAttributeValue();
+                        value = ParseAttributeValue(out hasDoubleQuote, out hasSingleQuote);
                         SkipWhitespace();
                     }
+
+                    tag.AttributesHasDoubleQuotes = hasDoubleQuote;
+                    tag.AttributesHasSingleQuotes = hasSingleQuote;
                     // Add attribute to collection if requested tag
                     if (requested)
                     {
@@ -343,14 +365,21 @@ namespace HtmlParser
         /// missing closing quotes, etc.
         /// </summary>
         /// <returns>Returns the parsed value string</returns>
-        protected string ParseAttributeValue()
+        protected string ParseAttributeValue(out bool hasDoubleQuote, out bool hasSingleQuote)
         {
+            hasDoubleQuote = false;
+            hasSingleQuote = false;
+
             int start, end;
             char c = Peek();
             if (c == '"' || c == '\'')
             {
+                if (c == '"') hasDoubleQuote = true;
+                else hasSingleQuote = true;
+
                 // Move past opening quote
                 Move();
+                
                 // Parse quoted value
                 start = _pos;
                 _pos = _html.IndexOfAny(new char[] { c, '\r', '\n' }, start);
