@@ -24,6 +24,8 @@
             document.OptionFixNestedTags = false;
             document.OptionOutputAsXml = false;
             document.OptionOutputOptimizeAttributeValues = false;
+            document.OptionOutputOriginalCase = true;
+
             document.LoadHtml(input);
 
             this.tagTable = tagTable;
@@ -35,7 +37,6 @@
         {
             return document.DocumentNode.Descendants();
         }
-
         public string GetRawEndTag(HtmlNode node)
         {
             Contract.Requires<ArgumentNullException>(node != null);

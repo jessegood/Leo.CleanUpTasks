@@ -145,11 +145,10 @@
             return false;
         }
 
-        private List<IAbstractMarkupData> CreateMarkupData(string input, HtmlTagTable tagTable)
+        private List<IAbstractMarkupData> CreateMarkupData(string input, HtmlTagTable tagTable, HtmlEntitizer entitizer)
         {
             var markupList = new List<IAbstractMarkupData>();
-
-            var parser = new HtmlHelper(input, tagTable);
+            var parser = new HtmlHelper(entitizer.Entitize(input), tagTable);
 
             if (parser.ParseErrors.Count() > 0)
             {
@@ -186,7 +185,7 @@
                             {
                                 if (!string.IsNullOrEmpty(node.InnerHtml))
                                 {
-                                    var itext = CreateIText(node.InnerHtml);
+                                    var itext = CreateIText(entitizer.DeEntitize(node.InnerHtml));
                                     tagPair.Add(itext);
                                 }
 
@@ -196,7 +195,7 @@
                             }
                             else
                             {
-                                var list = CreateMarkupData(node.InnerHtml, tagTable);
+                                var list = CreateMarkupData(node.InnerHtml, tagTable, entitizer);
 
                                 foreach (var item in list)
                                 {
@@ -211,7 +210,7 @@
                             var phTag = CreatePlaceHolderTag(stTag);
                             markupList.Add(phTag);
 
-                            var list = CreateMarkupData(node.InnerHtml, tagTable);
+                            var list = CreateMarkupData(node.InnerHtml, tagTable, entitizer);
 
                             foreach (var item in list)
                             {
@@ -224,11 +223,11 @@
                 }
                 else if (node.NodeType == HtmlNodeType.Text)
                 {
-                    markupList.Add(CreateIText(node.InnerText));
+                    markupList.Add(CreateIText(entitizer.DeEntitize(node.InnerText)));
                 }
                 else
                 {
-                    markupList.Add(CreateIText(node.InnerHtml));
+                    markupList.Add(CreateIText(entitizer.DeEntitize(node.InnerHtml)));
                 }
             }
 
@@ -358,7 +357,8 @@
 
         private void CreateTagPair(string updatedText, IText itext, IAbstractMarkupDataContainer parent)
         {
-            var markupData = CreateMarkupData(updatedText, new HtmlTagTable(updatedText));
+            var entitizer = new HtmlEntitizer();
+            var markupData = CreateMarkupData(updatedText, new HtmlTagTable(entitizer.Entitize(updatedText)), entitizer);
 
             var index = itext.IndexInParent;
 
@@ -520,7 +520,8 @@
 
         private void ReplaceTagPair(string updatedText, ITagPair tagPair, IAbstractMarkupDataContainer parent)
         {
-            var markupData = CreateMarkupData(updatedText, new HtmlTagTable(updatedText));
+            var entitizer = new HtmlEntitizer();
+            var markupData = CreateMarkupData(updatedText, new HtmlTagTable(entitizer.Entitize(updatedText)), entitizer);
 
             var index = tagPair.IndexInParent;
 
@@ -830,7 +831,8 @@
 
             if (match.Success)
             {
-                var markupData = CreateMarkupData(match.Groups[2].Value, new HtmlTagTable(match.Groups[2].Value));
+                var entitizer = new HtmlEntitizer();
+                var markupData = CreateMarkupData(match.Groups[2].Value, new HtmlTagTable(entitizer.Entitize(match.Groups[2].Value)), entitizer);
 
                 if (markupData.Count > 0)
                 {

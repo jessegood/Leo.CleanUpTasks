@@ -305,6 +305,7 @@
       <DependentUpon>TagsSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="TargetCleanUpHandler.cs" />
+    <Compile Include="Utilities\HtmlEntitizer.cs" />
     <Compile Include="Utilities\HtmlHelper.cs" />
     <Compile Include="Utilities\HtmlParser.cs" />
     <Compile Include="Utilities\ITextMerger.cs" />
