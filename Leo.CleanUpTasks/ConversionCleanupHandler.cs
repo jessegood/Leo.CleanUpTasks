@@ -300,11 +300,11 @@
                     {
                         if (string.IsNullOrEmpty(splitString))
                         {
-                            splitString += $"({match.Value})";
+                            splitString += $"({Regex.Escape(match.Value)})";
                         }
                         else
                         {
-                            splitString += $"|({match.Value})";
+                            splitString += $"|({Regex.Escape(match.Value)})";
                         }
                     }
 
