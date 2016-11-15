@@ -39,8 +39,12 @@
 
             foreach (var segPair in paragraphUnit.SegmentPairs)
             {
+                var source = segPair.Source;
                 var target = segPair.Target;
 
+                // Convert tags back to text in source
+                source.AcceptVisitor(new TargetCleanUpHandler(sourceSettings, ItemFactory, reporter));
+                // Convert tags back to text in target
                 target.AcceptVisitor(new TargetCleanUpHandler(sourceSettings, ItemFactory, reporter));
                 target.AcceptVisitor(new ConversionCleanupHandler(targetSettings, LoadConversionFiles(), ItemFactory, reporter, reportGenerator, BatchTaskMode.Target));
             }

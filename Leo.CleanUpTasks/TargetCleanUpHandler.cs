@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using Utilities;
+    using Models;
 
     public class TargetCleanUpHandler : SegmentHandlerBase, ISegmentHandler
     {
@@ -60,13 +61,20 @@
             if (tagContent != null)
             {
                 // Remove spacing before performing comparison
-                if (settings.Placeholders.Any(p => Regex.Replace(p.Content, @"\s", "") == Regex.Replace(tagContent, @"\s", "")))
+                if (settings.Placeholders.Any(p => ComparePlaceholders(p, tagContent)))
                 {
                     tagPairs.Add(tagPair);
                 }
             }
 
             VisitChildren(tagPair);
+        }
+
+        private static bool ComparePlaceholders(Placeholder p, string tagContent)
+        {
+            // Removes all spacing and single and double quotations before doing a comparison
+            return Regex.Replace(p.Content, @"\s", "").Replace("\"", "").Replace("'", "")
+                == Regex.Replace(tagContent, @"\s", "").Replace("\"", "").Replace("'", "");
         }
 
         private string ConvertTagToText(IPlaceholderTag phTag)
@@ -81,7 +89,7 @@
             {
                 if (tag.Attributes.Count() > 0)
                 {
-                    var isTagPair = settings.Placeholders.Where(p => p.Content == content).First().IsTagPair;
+                    var isTagPair = settings.Placeholders.Where(p => Regex.Replace(p.Content, @"\s+", "") == Regex.Replace(content, @"\s+", "")).First().IsTagPair;
                     if (isTagPair)
                     {
                         text = content;    

@@ -381,7 +381,7 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <CreatePluginPackage>true</CreatePluginPackage>
+    <CreatePluginPackage>false</CreatePluginPackage>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
