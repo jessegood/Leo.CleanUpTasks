@@ -25,6 +25,11 @@ namespace HtmlParser
         /// True if this tag contained a trailing forward slash
         /// </summary>
         public bool TrailingSlash { get; set; }
+        
+        /// <summary>
+        /// True if there is a space before the trailing slash
+        /// </summary>
+        public bool SpaceBeforeTrailingSlash { get; set; }
 
         /// <summary>
         /// True if this tag has an end tag
@@ -198,7 +203,11 @@ namespace HtmlParser
                 {
                     // Handle trailing forward slash
                     if (requested)
+                    {
                         tag.TrailingSlash = true;
+                        tag.SpaceBeforeTrailingSlash = Peek(-1) == ' ';
+                    }
+
                     Move();
                     SkipWhitespace();
                     // If this is a script tag, it was closed
@@ -291,7 +300,10 @@ namespace HtmlParser
                 {
                     // Handle trailing forward slash
                     if (requested)
+                    {
                         tag.TrailingSlash = true;
+                        tag.SpaceBeforeTrailingSlash = Peek(-1) == ' ';
+                    }
                     Move();
                     SkipWhitespace();
                     // If this is a script tag, it was closed

@@ -98,7 +98,7 @@
             var m = Regex.Match(text, @"<\w+\s+\w+?=""(.+)""[\s\/]*>");
             if (m.Success)
             {
-                placeHolderTagProps.DisplayText = $"<{m.Groups[1].Value}>";
+                placeHolderTagProps.DisplayText = $"{m.Groups[1].Value}";
             }
             else
             {

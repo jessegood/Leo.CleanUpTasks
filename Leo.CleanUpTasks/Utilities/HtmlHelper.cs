@@ -96,7 +96,14 @@
             {
                 if (tagTable.Table[node.Name].TrailingSlash)
                 {
-                    builder.Append("/>");
+                    if (tagTable.Table[node.Name].SpaceBeforeTrailingSlash)
+                    {
+                        builder.Append(" />");
+                    }
+                    else
+                    {
+                        builder.Append("/>");
+                    }
                 }
                 else
                 {
