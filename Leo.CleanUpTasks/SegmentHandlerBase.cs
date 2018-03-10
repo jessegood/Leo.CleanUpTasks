@@ -93,7 +93,17 @@
             var placeHolderTagProps = ItemFactory.PropertiesFactory.CreatePlaceholderTagProperties(text);
             placeHolderTagProps.TagContent = text;
             placeHolderTagProps.TagId = new TagId(Guid.NewGuid().ToString());
-            placeHolderTagProps.DisplayText = text;
+
+            // Only show attribute value
+            var m = Regex.Match(text, @"<\w+\s+\w+?=""(.+)""[\s\/]*>");
+            if (m.Success)
+            {
+                placeHolderTagProps.DisplayText = $"<{m.Groups[1].Value}>";
+            }
+            else
+            {
+                placeHolderTagProps.DisplayText = text;
+            }
 
             return CreatePlaceHolderTagInternal(text, placeHolderTagProps);
         }

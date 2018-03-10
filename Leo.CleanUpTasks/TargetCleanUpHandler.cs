@@ -105,6 +105,18 @@
                     {
                         text = $"</{tag.Name}>";
                     }
+                    else if (tag.TrailingSlash)
+                    {
+                        // Check if there is a space before the trailing slash
+                        if (tag.ToString().Contains(" />"))
+                        {
+                            text = $"<{tag.Name} />";
+                        }
+                        else
+                        {
+                            text = $"<{tag.Name}/>";
+                        }
+                    }
                     else
                     {
                         text = $"<{tag.Name}>";

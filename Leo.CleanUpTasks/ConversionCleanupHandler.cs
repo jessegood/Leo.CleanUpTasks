@@ -380,19 +380,23 @@
 
             foreach (var item in tagPair.AllSubItems)
             {
-                if (item is IText)
+                // Make sure we do not add content of container nodes
+                if (object.ReferenceEquals(item.Parent, tagPair))
                 {
-                    var txt = ((IText)item).Properties.Text;
-                    stringBuilder.Append(txt);
-                }
-                else if (item is IPlaceholderTag)
-                {
-                    var tag = ((IPlaceholderTag)item).TagProperties.TagContent;
-                    stringBuilder.Append(tag);
-                }
-                else if (item is ITagPair)
-                {
-                    GetFullText((ITagPair)item, stringBuilder);
+                    if (item is IText)
+                    {
+                        var txt = ((IText)item).Properties.Text;
+                        stringBuilder.Append(txt);
+                    }
+                    else if (item is IPlaceholderTag)
+                    {
+                        var tag = ((IPlaceholderTag)item).TagProperties.TagContent;
+                        stringBuilder.Append(tag);
+                    }
+                    else if (item is ITagPair)
+                    {
+                        GetFullText((ITagPair)item, stringBuilder);
+                    }
                 }
             }
 
